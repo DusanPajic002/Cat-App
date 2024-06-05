@@ -61,11 +61,9 @@ class CatListViewModel (
         viewModelScope.launch {
             setState { copy(fetching = true) }
             try {
-                val cats = withContext(Dispatchers.IO) {
-                    repository.fetchAllCats().map { it.asCatUiModel() }
+                withContext(Dispatchers.IO) {
+                    repository.fetchAllCats()
                 }
-                setState { copy(cats = cats ) }
-                setState { copy(filteredCats = cats ) }
             } catch (error: Exception) {
                 setState { copy(error = CatListState.ListError.ListUpdateFailed(cause = error)) }
             } finally {
