@@ -1,4 +1,4 @@
-package com.example.domaci2.database
+package com.example.mobilne2.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -14,6 +14,6 @@ import com.example.domaci2.catListP.db.CatListDao
 )
 abstract class AppDatabase : RoomDatabase() {
 
-        abstract fun catListDao(): CatListDao
+    abstract fun catListDao(): CatListDao
 
 }
