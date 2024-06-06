@@ -13,7 +13,7 @@ class AppDatabaseBuilder @Inject constructor(
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java,
-            "rma.db",
+            "mobilne.db",
         )
             .fallbackToDestructiveMigration()
             .build()
