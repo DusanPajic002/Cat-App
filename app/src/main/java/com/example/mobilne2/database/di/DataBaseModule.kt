@@ -10,7 +10,8 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DataBaseModule {
+object DatabaseModule {
+
     @Singleton
     @Provides
     fun provideDatabase(builder: AppDatabaseBuilder): AppDatabase {

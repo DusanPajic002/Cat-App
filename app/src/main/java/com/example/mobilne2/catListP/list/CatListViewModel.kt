@@ -1,11 +1,13 @@
 package com.example.mobilne2.catListP.list
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobilne2.catListP.api.model.CatApiModel
 import com.example.mobilne2.catListP.list.model.CatListUI
 import com.example.mobilne2.catListP.list.CatListState.FilterEvent
 import com.example.mobilne2.catListP.repository.CatListRepostiory
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,6 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+@HiltViewModel
 class CatListViewModel @Inject constructor(
     private val repository: CatListRepostiory,
 ) : ViewModel() {
@@ -28,6 +31,7 @@ class CatListViewModel @Inject constructor(
 
     init {
        // observeEvents()
+        Log.e("Greska321321321321", "Messagdsadsadasdase")
         fetchCats()
     }
 
@@ -63,12 +67,13 @@ class CatListViewModel @Inject constructor(
 //    }
 
     private fun fetchCats() {
+        println()
         viewModelScope.launch {
             setState { copy(fetching = true) }
             try {
                 withContext(Dispatchers.IO) {
-                    print("Fetching cats")
                     repository.fetchAllCats()
+                    println("dsadsadassssssssssssss1111111111111111111")
                 }
             } catch (error: Exception) {
                 setState { copy(error = CatListState.ListError.ListUpdateFailed(cause = error)) }
@@ -78,13 +83,5 @@ class CatListViewModel @Inject constructor(
         }
     }
 
-
-    private fun CatApiModel.asCatUiModel() = CatListUI(
-        id = this.id,
-        name = this.name,
-        alt_names = this.alt_names ,
-        description = this.description,
-        temperament = this.temperament.split(", ")
-    )
 
 }

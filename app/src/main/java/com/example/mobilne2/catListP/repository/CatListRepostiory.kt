@@ -14,7 +14,6 @@ class CatListRepostiory @Inject constructor(
         val cats = catsApi.getAllCats()
         database.catListDao().insertAll(cats = cats.map { it.asCatDbModel() })
     }
-
     suspend fun observeAllCatsProfiles() = database.catListDao().observeAll()
 
 }

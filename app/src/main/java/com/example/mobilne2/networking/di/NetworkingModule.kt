@@ -43,11 +43,9 @@ object NetworkingModule {
     @Provides
     fun provideRetrofitClient(
         okHttpClient: OkHttpClient,
-        @BaseUrl apiUrl: String,
     ) : Retrofit {
         return Retrofit.Builder()
-//            .baseUrl("https://jsonplaceholder.typicode.com/")
-            .baseUrl(apiUrl)
+            .baseUrl("https://api.thecatapi.com/v1/")
             .client(okHttpClient)
             .addConverterFactory(AppJson.asConverterFactory("application/json".toMediaType()))
             .build()

@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import com.example.mobilne2.Acore.theme.Mobilne2Theme
 import com.example.mobilne2.analytics.AppAnalytics
@@ -23,14 +22,10 @@ class MainActivity : ComponentActivity() {
         val app = (applicationContext as App)
 
         setContent {
-            CompositionLocalProvider(
-             //   LocalAnalytics provides analytics
-            ) {
                 Mobilne2Theme {
 
                     ScreenManager()
                 }
-            }
         }
     }
 }
