@@ -1,9 +1,9 @@
-package com.example.mobilne2.catProfile
+package com.example.mobilne2.catProfile.profile
 
 import com.example.mobilne2.catProfile.profile.model.CatProfileUI
 
 data class CatProfileState (
-    val catId: String,
+    val catId: String = "",
     val fetching: Boolean = false,
     val cat: CatProfileUI? = null,
     val image: String? = null,

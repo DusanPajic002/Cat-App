@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.mobilne2.catListP.list.catListScreen
+import com.example.mobilne2.catProfile.catProfileScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -21,10 +22,10 @@ fun ScreenManager() {
             route = "cats",
             navController = navController,
         )
-//        catProfileScreen(
-//            route = "cat/{id}",
-//            navController = navController,
-//        )
+        catProfileScreen(
+            route = "cat/{id}",
+            navController = navController,
+        )
 
     }
 

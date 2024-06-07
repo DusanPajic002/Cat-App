@@ -17,6 +17,6 @@ import com.example.mobilne2.catProfile.db.CatProfileDao
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun catListDao(): CatListDao
-   // abstract fun catProfileDao(): CatProfileDao
+    abstract fun catProfileDao(): CatProfileDao
 
 }

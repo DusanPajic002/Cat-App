@@ -64,7 +64,7 @@ fun NavGraphBuilder.catListScreen(
             catListViewModel.setEvent(it)
         },
         onItemClick = {
-            //navController.navigate(route = "cat/${it.id}")
+            navController.navigate(route = "cat/${it.id}")
         },
     )
 }
@@ -88,6 +88,8 @@ fun CatList(
             )
         },
         content = {
+            println("11111111111111111111111")
+            println(state.cats)
 
             CatsList(
                 paddingValues = it,
@@ -154,41 +156,41 @@ private fun CatsList(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
-//        TextField(
-//            value = textfilt,
-//            onValueChange = {
-//                eventPublisher(CatListState.FilterEvent.filterEvent(it))
-//            },
-//            label = { Text("Filter Cats") },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(horizontal = 16.dp)
-//                .padding(bottom = 2.dp)
-//                .padding(top = 8.dp),
-//            trailingIcon = {
-//                if (textfilt.isNotEmpty()) {
-//                    IconButton(onClick = {
-//                        eventPublisher(CatListState.FilterEvent.filterEvent(""))
-//                        eventPublisher(CatListState.FilterEvent.filterClick)
-//                    }) {
-//                        Icon(Icons.Default.Clear, contentDescription = "Clear text")
-//                    }
-//                }
-//            }
-//        )
-//
-//        Button(
-//            onClick = {
-//                focusManager.clearFocus()
-//                eventPublisher(CatListState.FilterEvent.filterClick)
-//
-//            },
-//            modifier = Modifier
-//                .width(150.dp)
-//                .padding(bottom = 14.dp),
-//        ) {
-//            Text("Filter")
-//        }
+        TextField(
+            value = textfilt,
+            onValueChange = {
+                eventPublisher(CatListState.FilterEvent.filterEvent(it))
+            },
+            label = { Text("Filter Cats") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 2.dp)
+                .padding(top = 8.dp),
+            trailingIcon = {
+                if (textfilt.isNotEmpty()) {
+                    IconButton(onClick = {
+                        eventPublisher(CatListState.FilterEvent.filterEvent(""))
+                        eventPublisher(CatListState.FilterEvent.filterClick)
+                    }) {
+                        Icon(Icons.Default.Clear, contentDescription = "Clear text")
+                    }
+                }
+            }
+        )
+
+        Button(
+            onClick = {
+                focusManager.clearFocus()
+                eventPublisher(CatListState.FilterEvent.filterClick)
+
+            },
+            modifier = Modifier
+                .width(150.dp)
+                .padding(bottom = 14.dp),
+        ) {
+            Text("Filter")
+        }
 
         items.forEach {
             Column {

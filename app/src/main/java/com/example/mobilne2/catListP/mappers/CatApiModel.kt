@@ -2,6 +2,7 @@ package com.example.mobilne2.catListP.mappers
 
 import com.example.mobilne2.catListP.api.model.CatApiModel
 import com.example.mobilne2.catListP.db.Cat
+import com.example.mobilne2.catListP.list.model.CatListUI
 
 fun CatApiModel.asCatDbModel(): Cat {
     return Cat(
@@ -10,7 +11,6 @@ fun CatApiModel.asCatDbModel(): Cat {
         description = this.description,
         alt_names = this.alt_names,
         temperament = this.temperament,
-/*
         cfa_url = this.cfa_url,
         vetstreet_url = this.vetstreet_url,
         vcahospitals_url = this.vcahospitals_url,
@@ -43,8 +43,20 @@ fun CatApiModel.asCatDbModel(): Cat {
         hypoallergenic = this.hypoallergenic,
         reference_image_id = this.reference_image_id,
         url = this.url,
-        imperial = this.weight.imperial,
-        metric = this.weight.metric,
- */
     )
 }
+
+fun Cat.asCatModel(): CatListUI {
+    return CatListUI(
+        id = this.id,
+        name = this.name,
+        description = this.description,
+        alt_names = this.alt_names,
+        temperament = this.temperament.split(", ")
+        )
+}
+
+
+/*
+
+ */

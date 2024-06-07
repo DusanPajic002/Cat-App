@@ -1,5 +1,6 @@
 package com.example.mobilne2.catListP.list
 
+import com.example.mobilne2.catListP.api.model.CatApiModel
 import com.example.mobilne2.catListP.list.model.CatListUI
 
 data class CatListState(
