@@ -1,10 +1,12 @@
 package com.example.mobilne2.catProfile.profile
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobilne2.catProfile.mapper.asCatUiModel
 import com.example.mobilne2.catProfile.profile.CatProfileState
 import com.example.mobilne2.catProfile.repository.CatProfileRepository
+import com.example.mobilne2.navigation.catId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,25 +18,24 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CatProfileViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val repository: CatProfileRepository,
 ) : ViewModel() {
 
+    private val catId: String = savedStateHandle.catId
     private val _state = MutableStateFlow(CatProfileState())
     val state = _state.asStateFlow()
     private fun setState(reducer: CatProfileState.() -> CatProfileState) =
         _state.getAndUpdate(reducer)
 
     init {
-    }
-    fun setCatId(catId: String) { // treba ispraviti
-        setState { copy(catId = catId) }
         fetchCat()
     }
     private fun fetchCat() {
         viewModelScope.launch {
             setState { copy(fetching = true) }
             try {
-                val catt = withContext(Dispatchers.IO) {repository.getCats(state.value.catId)}
+                val catt = withContext(Dispatchers.IO) {repository.getCats(catId)}
                 //setState { copy(catId = catt.id )}
                 setState { copy(cat = catt.asCatUiModel()) }
 

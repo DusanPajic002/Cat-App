@@ -52,12 +52,9 @@ fun NavGraphBuilder.catProfileScreen(
 ) = composable(
     route = route,
 ) { navBackStackEntry ->
-    val dataId = navBackStackEntry.arguments?.getString("id")
-        ?: throw IllegalArgumentException("id is required.")
 
-    val catProfileViewModel = hiltViewModel<CatProfileViewModel>().apply {
-        setCatId(dataId)
-    }
+    val catProfileViewModel: CatProfileViewModel = hiltViewModel(navBackStackEntry)
+
     val state = catProfileViewModel.state.collectAsState()
 
     CatProfile(
