@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "rs.edu.raf.rma"
+    namespace = "com.example.mobilne2"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "rs.edu.raf.rma"
+        applicationId = "com.example.mobilne2"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

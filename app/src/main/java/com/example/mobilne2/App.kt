@@ -1,12 +1,14 @@
-package com.example.domaci2
+package com.example.mobilne2
 
 import android.app.Application
 import android.util.Log
 import com.example.mobilne2.auth.AuthStore
+import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
+@HiltAndroidApp
 class App : Application() {
 
     @Inject

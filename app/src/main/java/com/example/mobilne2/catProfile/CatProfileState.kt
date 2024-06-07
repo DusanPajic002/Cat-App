@@ -1,6 +1,6 @@
-package com.example.domaci2.catProfile
+package com.example.mobilne2.catProfile
 
-import com.example.domaci2.breeds.CatProfileUI
+import com.example.mobilne2.catProfile.profile.model.CatProfileUI
 
 data class CatProfileState (
     val catId: String,

@@ -1,4 +1,4 @@
-package com.example.domaci2.Acore.theme
+package com.example.mobilne2.Acore.theme
 
 import android.app.Activity
 import android.os.Build
@@ -38,7 +38,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun Domaci2Theme(
+fun Mobilne2Theme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,

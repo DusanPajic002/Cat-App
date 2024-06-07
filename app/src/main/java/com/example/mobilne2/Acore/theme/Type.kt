@@ -1,4 +1,4 @@
-package com.example.domaci2.Acore.theme
+package com.example.mobilne2.Acore.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

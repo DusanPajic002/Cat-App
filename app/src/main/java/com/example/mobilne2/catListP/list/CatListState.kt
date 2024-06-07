@@ -1,6 +1,6 @@
-package com.example.domaci2.catListP.list
+package com.example.mobilne2.catListP.list
 
-import com.example.domaci2.catListP.list.model.CatListUI
+import com.example.mobilne2.catListP.list.model.CatListUI
 
 data class CatListState(
     val fetching: Boolean = false,

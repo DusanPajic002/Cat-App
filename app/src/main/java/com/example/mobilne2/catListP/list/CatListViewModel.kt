@@ -1,11 +1,11 @@
-package com.example.domaci2.catListP.list
+package com.example.mobilne2.catListP.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domaci2.catListP.api.model.CatApiModel
-import com.example.domaci2.catListP.list.model.CatListUI
-import com.example.domaci2.catListP.list.CatListState.FilterEvent
-import com.example.domaci2.catListP.repository.Repository
+import com.example.mobilne2.catListP.api.model.CatApiModel
+import com.example.mobilne2.catListP.list.model.CatListUI
+import com.example.mobilne2.catListP.list.CatListState.FilterEvent
+import com.example.mobilne2.catListP.repository.CatListRepostiory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,9 +13,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class CatListViewModel (
-    private val repository: Repository = Repository
+class CatListViewModel @Inject constructor(
+    private val repository: CatListRepostiory,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(CatListState())
@@ -26,42 +27,47 @@ class CatListViewModel (
     fun setEvent(event: FilterEvent) = viewModelScope.launch { events.emit(event) }
 
     init {
-        observeEvents()
+       // observeEvents()
         fetchCats()
     }
 
-    private fun observeEvents() {
-        viewModelScope.launch {
-            events.collect {
-                when (it) {
-                    is FilterEvent.filterClick -> {filterEvent(filter = state.value.filter)}
-                    is FilterEvent.filterEvent -> {
-                        setState {
-                            copy(filter = it.textfilt)
-                        }
-                    }
-                }
-            }
-        }
-    }
+//    private fun observeEvents() {
+//        viewModelScope.launch {
+//            events.collect {
+//                when (it) {
+//                    is FilterEvent.filterClick -> {filterEvent(filter = state.value.filter)}
+//                    is FilterEvent.filterEvent -> {
+//                        setState {
+//                            copy(filter = it.textfilt)
+//                        }
+//                    }
+//
+//                    else -> {
+//
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-    private fun filterEvent(filter: String){
-        viewModelScope.launch {
-            try {
-                if(filter.equals(""))
-                    setState { copy(filteredCats = state.value.cats) }
-                else
-                    setState { copy(filteredCats = state.value.cats.filter { it.name.startsWith(filter, ignoreCase = true) }) }
-            } catch (error: Exception) {
-            }
-        }
-    }
+//    private fun filterEvent(filter: String){
+//        viewModelScope.launch {
+//            try {
+//                if(filter.equals(""))
+//                    setState { copy(filteredCats = state.value.cats) }
+//                else
+//                    setState { copy(filteredCats = state.value.cats.filter { it.name.startsWith(filter, ignoreCase = true) }) }
+//            } catch (error: Exception) {
+//            }
+//        }
+//    }
 
     private fun fetchCats() {
         viewModelScope.launch {
             setState { copy(fetching = true) }
             try {
                 withContext(Dispatchers.IO) {
+                    print("Fetching cats")
                     repository.fetchAllCats()
                 }
             } catch (error: Exception) {
@@ -71,6 +77,7 @@ class CatListViewModel (
             }
         }
     }
+
 
     private fun CatApiModel.asCatUiModel() = CatListUI(
         id = this.id,

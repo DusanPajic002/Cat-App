@@ -1,4 +1,4 @@
-package rs.edu.raf.rma.networking.di
+package com.example.mobilne2.networking.di
 
 import javax.inject.Qualifier
 

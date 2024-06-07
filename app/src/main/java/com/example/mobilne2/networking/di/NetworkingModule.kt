@@ -1,5 +1,6 @@
-package rs.edu.raf.rma.networking.di
+package com.example.mobilne2.networking.di
 
+import com.example.mobilne2.networking.serialization.AppJson
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -9,8 +10,8 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import rs.edu.raf.rma6.networking.serialization.AppJson
 import javax.inject.Singleton
+
 
 @Module
 @InstallIn(SingletonComponent::class)

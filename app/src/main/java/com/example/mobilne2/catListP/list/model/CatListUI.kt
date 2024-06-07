@@ -1,4 +1,4 @@
-package com.example.domaci2.catListP.list.model
+package com.example.mobilne2.catListP.list.model
 
 data class CatListUI(
     val id: String,

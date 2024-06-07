@@ -1,4 +1,4 @@
-package com.example.domaci2.catListP.db
+package com.example.mobilne2.catListP.db
 
 import androidx.room.Dao
 import androidx.room.Insert

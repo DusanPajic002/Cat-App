@@ -1,4 +1,4 @@
-package com.example.domaci2.Acore.compose
+package com.example.mobilne2.Acore.compose
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth

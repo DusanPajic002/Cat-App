@@ -1,4 +1,4 @@
-package com.example.domaci2.breeds
+package com.example.mobilne2.catProfile.profile.model
 
 
 data class CatProfileUI (
@@ -10,7 +10,7 @@ data class CatProfileUI (
     val originCountries: List<String>,
     val temperamentTraits: List<String>,
     val lifeSpan: String,
-    val averageWeight: String,
+    //val averageWeight: String,
     val adaptability: Int,
     val affectionLevel: Int,
     val childFriendly: Int,

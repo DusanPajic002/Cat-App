@@ -1,4 +1,4 @@
-package com.example.domaci2.catListP.list
+package com.example.mobilne2.catListP.list
 
 
 import androidx.compose.foundation.clickable
@@ -46,7 +46,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.domaci2.catListP.list.model.CatListUI
+import com.example.mobilne2.catListP.list.model.CatListUI
 
 
 @ExperimentalMaterial3Api
@@ -116,6 +116,10 @@ fun CatList(
                                 val errorMessage = when (state.error) {
                                     is CatListState.ListError.ListUpdateFailed ->
                                         "Failed to load. Error message: ${state.error.cause?.message}."
+
+                                    else -> {
+                                        "An error occurred."
+                                    }
                                 }
                                 Text(text = errorMessage)
                             }

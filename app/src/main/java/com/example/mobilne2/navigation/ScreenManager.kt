@@ -1,11 +1,10 @@
-package com.example.domaci2.navigation
+package com.example.mobilne2.navigation
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.example.domaci2.catListP.list.catListScreen
-import com.example.domaci2.catProfile.catProfileScreen
+import com.example.mobilne2.catListP.list.catListScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -22,10 +21,10 @@ fun ScreenManager() {
             route = "cats",
             navController = navController,
         )
-        catProfileScreen(
-            route = "cat/{id}",
-            navController = navController,
-        )
+//        catProfileScreen(
+//            route = "cat/{id}",
+//            navController = navController,
+//        )
 
     }
 

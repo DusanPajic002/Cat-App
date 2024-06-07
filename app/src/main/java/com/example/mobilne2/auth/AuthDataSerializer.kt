@@ -1,10 +1,10 @@
 package com.example.mobilne2.auth
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.InputStream
 import java.io.OutputStream
 import androidx.datastore.core.Serializer
+import kotlinx.coroutines.Dispatchers
 
 class AuthDataSerializer : Serializer<String> {
     override val defaultValue: String = ""
