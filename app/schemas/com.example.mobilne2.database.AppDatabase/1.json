@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "fb15538ea66263575d20352e160979b7",
+    "identityHash": "0627fcd8e7bd4038eb20f25a02962e41",
     "entities": [
       {
         "tableName": "Cat",
@@ -239,12 +239,44 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "CatImages",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `catId` TEXT NOT NULL, `url` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "catId",
+            "columnName": "catId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fb15538ea66263575d20352e160979b7')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0627fcd8e7bd4038eb20f25a02962e41')"
     ]
   }
 }

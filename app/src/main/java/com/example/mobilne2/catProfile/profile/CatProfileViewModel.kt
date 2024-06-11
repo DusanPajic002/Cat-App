@@ -3,6 +3,7 @@ package com.example.mobilne2.catProfile.profile
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mobilne2.catProfile.mapper.asCatImageUiModel
 import com.example.mobilne2.catProfile.mapper.asCatUiModel
 import com.example.mobilne2.catProfile.profile.CatProfileState
 import com.example.mobilne2.catProfile.repository.CatProfileRepository
@@ -35,13 +36,14 @@ class CatProfileViewModel @Inject constructor(
         viewModelScope.launch {
             setState { copy(fetching = true) }
             try {
-                val catt = withContext(Dispatchers.IO) {repository.getCats(catId)}
-                //setState { copy(catId = catt.id )}
-                setState { copy(cat = catt.asCatUiModel()) }
+                val cat = withContext(Dispatchers.IO) {repository.getCats(catId)}
+                setState { copy(cat = cat.asCatUiModel()) }
 
-//                val image = withContext(Dispatchers.IO) {
-//                    repository.fetchCatImages(catt.reference_image_id)
-               // setState { copy(image = image.url ) }
+                withContext(Dispatchers.IO) {repository.fetchImages(cat.reference_image_id.toString(), cat.id)}
+
+                val image = withContext(Dispatchers.IO) {repository.getImages(cat.id)}
+                setState { copy(image = image.asCatImageUiModel()) }
+
             } catch (error: Exception) {
                 setState { copy(catId = "") }
                 setState { copy(error = CatProfileState.DetailsError.DataUpdateFailed(cause = error)) }

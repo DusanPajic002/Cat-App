@@ -4,7 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-class CatImages {
-    @PrimaryKey  var id: String = ""
+data class CatImages (
+    @PrimaryKey  var id: String = "",
+    var catId: String = "",
     var url: String = ""
-}
+)

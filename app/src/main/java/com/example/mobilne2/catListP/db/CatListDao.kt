@@ -12,7 +12,7 @@ interface CatListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(cats: List<Cat>)
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(cat: Cat)
 
     @Query("SELECT * FROM Cat")

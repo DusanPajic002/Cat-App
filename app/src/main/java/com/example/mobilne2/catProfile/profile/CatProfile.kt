@@ -118,7 +118,8 @@ fun CatProfile(
                 } else if (state.cat != null) {
                     CatData(
                         cat = state.cat,
-                        imageUrl = state.image ?: ""
+
+                        imageUrl = (state.image?.url ?: "")
                     )
                 }
             }
