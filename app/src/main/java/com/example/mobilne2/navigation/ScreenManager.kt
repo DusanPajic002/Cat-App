@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.mobilne2.catListP.list.catListScreen
+import com.example.mobilne2.catProfile.aGallery.aPhoto.catPhotoScreen
 import com.example.mobilne2.catProfile.aGallery.gallery.catGaleryScreen
 import com.example.mobilne2.catProfile.catProfileScreen
 
@@ -45,6 +46,12 @@ fun ScreenManager() {
                 navController.navigateUp()
             },
         )
+        catPhotoScreen(
+            route = "photo/{catPhotoId}",
+            onClose = {
+                navController.navigateUp()
+            },
+        )
 
     }
 
@@ -53,3 +60,5 @@ inline val SavedStateHandle.catId: String
     get() = checkNotNull(get("catId")) { "catId is mandatory" }
 inline val SavedStateHandle.catProfileId: String
     get() = checkNotNull(get("catProfileId")) { "catProfileId is mandatory" }
+inline val SavedStateHandle.catPhotoId: String
+    get() = checkNotNull(get("catPhotoId")) { "catPhotoId is mandatory" }

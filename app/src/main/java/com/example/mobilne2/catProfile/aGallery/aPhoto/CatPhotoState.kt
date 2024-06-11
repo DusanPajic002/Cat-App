@@ -1,11 +1,12 @@
-package com.example.mobilne2.catProfile.aGallery.gallery
+package com.example.mobilne2.catProfile.aGallery.aPhoto
 
 import com.example.mobilne2.catProfile.profile.model.CatImageUI
-import com.example.mobilne2.catProfile.profile.model.CatProfileUI
 
-data class CatGalleryState (
+data class CatPhotoState (
     val fetching: Boolean = false,
-    val album: List<CatImageUI> = emptyList(),
+    val catID: String = "",
+    val imageIndex: String = "",
+    val photos: List<CatImageUI> = emptyList(),
     val error: DetailsError? = null,
 ) {
     sealed class DetailsError {

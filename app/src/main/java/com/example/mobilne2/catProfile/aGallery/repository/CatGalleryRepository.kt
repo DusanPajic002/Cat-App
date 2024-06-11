@@ -11,9 +11,8 @@ class CatGalleryRepository @Inject constructor(
     private val database: AppDatabase,
 ) {
 
-
-    suspend fun getAllImagesCatID(id: String): List<CatImages> {
-        return database.catProfileDao().getImagesCatID(id)
+    suspend fun getAllImagesCatID(catID: String): List<CatImages> {
+        return database.catProfileDao().getImagesCatID(catID)
     }
 
     suspend fun getImagesByID(id: String): CatImages {
@@ -24,4 +23,9 @@ class CatGalleryRepository @Inject constructor(
         val images = catsApi.getAllImages(100, catID)
         database.catProfileDao().insertAllImages(catImages = images.map { it.asCatImageModel(catID) })
     }
+
+    suspend fun getCatID(imageID: String): String {
+        return database.catProfileDao().getCatID(imageID)
+    }
+
 }
