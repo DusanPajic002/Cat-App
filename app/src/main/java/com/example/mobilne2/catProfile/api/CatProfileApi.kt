@@ -4,12 +4,16 @@ import com.example.mobilne2.catProfile.api.model.CatImageApiModel
 import com.example.mobilne2.catProfile.db.CatImages
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface CatProfileApi {
-//
-//    @GET("breeds/{breedId}")
-//    suspend fun getCat(@Path("breedId") catId: String): CatApiModel
-
     @GET("images/{id}")
     suspend fun get_image_id(@Path("id") imageID: String): CatImageApiModel
+
+    @GET("images/search")
+    suspend fun getAllImages (
+        @Query("limit") limit: Int = 100,
+        @Query("catId") catId: String
+    ): List<CatImageApiModel>
+
 }

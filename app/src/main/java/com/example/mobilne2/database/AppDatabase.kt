@@ -12,7 +12,7 @@ import com.example.mobilne2.catProfile.db.CatProfileDao
         Cat::class,
         CatImages::class
     ],
-    version = 2,
+    version = 1,
     exportSchema = true,
 )
 abstract class AppDatabase : RoomDatabase() {

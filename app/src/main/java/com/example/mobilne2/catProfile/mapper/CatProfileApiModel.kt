@@ -8,6 +8,7 @@ import com.example.mobilne2.catProfile.profile.model.CatProfileUI
 
 fun Cat.asCatUiModel(): CatProfileUI{
     return CatProfileUI(
+        id = this.id,
         alt_names = this.alt_names,
         name = this.name,
         description = this.description,
@@ -30,6 +31,7 @@ fun Cat.asCatUiModel(): CatProfileUI{
         vocalisation = this.vocalisation,
         reference_image_id = this.reference_image_id?:"",
         isRare = this.rare == 1,
+        averageWeight = this.metric,
     )
 }
 
@@ -43,6 +45,8 @@ fun CatImageApiModel.asCatImageModel(catId: String): CatImages{
 
 fun CatImages.asCatImageUiModel(): CatImageUI{
     return CatImageUI(
+        id = this.id,
+        catId = this.catId,
         url = this.url,
     )
 }

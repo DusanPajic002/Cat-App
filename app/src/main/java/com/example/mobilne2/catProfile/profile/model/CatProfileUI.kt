@@ -2,6 +2,7 @@ package com.example.mobilne2.catProfile.profile.model
 
 
 data class CatProfileUI (
+    val id: String,
     val alt_names: String = "",
     val description: String,
     val wikipedia_url: String? = null,
@@ -24,5 +25,6 @@ data class CatProfileUI (
     val vocalisation: Int,
     val reference_image_id: String,
     val isRare: Boolean,
+    val averageWeight: String,
     //val imageUrl: String,
 )

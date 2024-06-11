@@ -2,6 +2,7 @@ package com.example.mobilne2.catProfile
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -48,20 +49,19 @@ import com.example.mobilne2.catProfile.profile.model.CatProfileUI
 @ExperimentalMaterial3Api
 fun NavGraphBuilder.catProfileScreen(
     route: String,
-    navController: NavController,
+    onItemClick: (String) -> Unit,
+    onClose: () -> Unit,
 ) = composable(
     route = route,
 ) { navBackStackEntry ->
 
     val catProfileViewModel: CatProfileViewModel = hiltViewModel(navBackStackEntry)
-
     val state = catProfileViewModel.state.collectAsState()
 
     CatProfile(
         state = state.value,
-        onClose = {
-            navController.navigateUp()
-        }
+        onItemClick = onItemClick,
+        onClose = onClose,
     )
 }
 
@@ -69,7 +69,8 @@ fun NavGraphBuilder.catProfileScreen(
 @Composable
 fun CatProfile(
     state: CatProfileState,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    onItemClick: (String) -> Unit,
 ){
     Scaffold(
         topBar = {
@@ -118,7 +119,7 @@ fun CatProfile(
                 } else if (state.cat != null) {
                     CatData(
                         cat = state.cat,
-
+                        onItemClick = onItemClick,
                         imageUrl = (state.image?.url ?: "")
                     )
                 }
@@ -132,6 +133,7 @@ fun CatProfile(
 private fun CatData(
     cat: CatProfileUI,
     imageUrl: String,
+    onItemClick: (String) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     Card(
@@ -148,14 +150,18 @@ private fun CatData(
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
         )
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(imageUrl)
-                .crossfade(true)
-                .build(),
-            contentDescription = "Loaded image",
-            modifier = Modifier.fillMaxSize()
-        )
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(imageUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "Loaded image",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable {
+                         onItemClick(cat.id)
+                    }
+            )
         Text(
             modifier = Modifier
                 .padding(8.dp),
@@ -171,7 +177,7 @@ private fun CatData(
         Text(
             modifier = Modifier
                 .padding(8.dp),
-            text = "Size:  " ,//+ cat.averageWeight,
+            text = "Size:  " + cat.averageWeight,
             fontSize = 18.sp,
         )
         Text(
@@ -219,5 +225,6 @@ private fun CatData(
                 fontSize = 16.sp,
             )
         }
+
     }
 }

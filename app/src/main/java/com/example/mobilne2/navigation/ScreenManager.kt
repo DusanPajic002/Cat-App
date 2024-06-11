@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.mobilne2.catListP.list.catListScreen
+import com.example.mobilne2.catProfile.aGallery.gallery.catGaleryScreen
 import com.example.mobilne2.catProfile.catProfileScreen
 
 
@@ -21,11 +22,28 @@ fun ScreenManager() {
     ) {
         catListScreen(
             route = "cats",
-            navController = navController,
+            onItemClick = {
+                navController.navigate(route = "cat/${it}")
+            },
         )
         catProfileScreen(
             route = "cat/{catId}",
-            navController = navController,
+            onItemClick = {
+                navController.navigate(route = "catGalery/${it}")
+            },
+            onClose = {
+                navController.navigateUp()
+            },
+
+        )
+        catGaleryScreen(
+            route = "catGalery/{catProfileId}",
+            onItemClick = {
+                navController.navigate(route = "photo/${it}")
+            },
+            onClose = {
+                navController.navigateUp()
+            },
         )
 
     }
@@ -33,3 +51,5 @@ fun ScreenManager() {
 }
 inline val SavedStateHandle.catId: String
     get() = checkNotNull(get("catId")) { "catId is mandatory" }
+inline val SavedStateHandle.catProfileId: String
+    get() = checkNotNull(get("catProfileId")) { "catProfileId is mandatory" }

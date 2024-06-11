@@ -13,9 +13,15 @@ interface CatProfileDao {
     suspend fun get(id: String): Cat
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllImages(catImages: List<CatImages>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertImages(catImages: CatImages)
 
-    @Query("SELECT * FROM CatImages WHERE catId = :id")
-    suspend fun getImages(id: String): CatImages
+    @Query("SELECT * FROM CatImages WHERE catId = :catId")
+    suspend fun getImagesCatID(catId: String): List<CatImages>
+
+    @Query("SELECT * FROM CatImages WHERE id = :id")
+    suspend fun getImagesByID(id: String): CatImages
 
 }

@@ -41,6 +41,7 @@ data class CatApiModel(
     val hypoallergenic: Int,
     val reference_image_id: String? = null,
     val url: String = "",
+    val weight: Weight = Weight("","")
 )
 
 @Serializable

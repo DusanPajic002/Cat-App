@@ -43,6 +43,8 @@ fun CatApiModel.asCatDbModel(): Cat {
         hypoallergenic = this.hypoallergenic,
         reference_image_id = this.reference_image_id,
         url = this.url,
+        imperial = this.weight.imperial,
+        metric = this.weight.metric
     )
 }
 
@@ -52,11 +54,8 @@ fun Cat.asCatModel(): CatListUI {
         name = this.name,
         description = this.description,
         alt_names = this.alt_names,
+        imperial = this.imperial,
+        metric = this.metric,
         temperament = this.temperament.split(", ")
         )
 }
-
-
-/*
-
- */

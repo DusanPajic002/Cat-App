@@ -53,8 +53,10 @@ import com.example.mobilne2.catListP.list.model.CatListUI
 @ExperimentalMaterial3Api
 fun NavGraphBuilder.catListScreen(
     route: String,
-    navController: NavController,
-) = composable(route = route) {
+    onItemClick: (String) -> Unit,
+) = composable(
+    route = route
+) {
     val catListViewModel = hiltViewModel<CatListViewModel>()
     val state by catListViewModel.state.collectAsState()
 
@@ -63,9 +65,7 @@ fun NavGraphBuilder.catListScreen(
         eventPublisher = {
             catListViewModel.setEvent(it)
         },
-        onItemClick = {
-            navController.navigate(route = "cat/${it.id}")
-        },
+        onItemClick = onItemClick,
     )
 }
 
@@ -74,7 +74,7 @@ fun NavGraphBuilder.catListScreen(
 fun CatList(
     state: CatListState,
     eventPublisher: (CatListState.FilterEvent) -> Unit,
-    onItemClick: (CatListUI) -> Unit,
+    onItemClick: (String) -> Unit,
 ) {
 
     Scaffold(
@@ -96,7 +96,9 @@ fun CatList(
                 items = state.filteredCats,
                 textfilt = state.filter,
                 eventPublisher = eventPublisher,
-                onItemClick = onItemClick,
+                onItemClick = {
+                    onItemClick(it)
+                },
             )
 
             if (state.cats.isEmpty()) {
@@ -142,7 +144,7 @@ private fun CatsList(
     paddingValues: PaddingValues,
     eventPublisher: (CatListState.FilterEvent) -> Unit,
     textfilt: String,
-    onItemClick: (CatListUI) -> Unit,
+    onItemClick: (String) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current
@@ -197,9 +199,7 @@ private fun CatsList(
                 key(it.name) {
                     CatListItem(
                         data = it,
-                        onClick = {
-                            onItemClick(it)
-                        },
+                        onItemClick = onItemClick,
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -228,14 +228,14 @@ fun SuggestionChipExample(personalityTraits: List<String>) {
 @Composable
 private fun CatListItem(
     data: CatListUI,
-    onClick: () -> Unit,
+    onItemClick: (String) -> Unit,
 ) {
     Card(
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .clickable {
-                onClick()
+                onItemClick(data.id)
             },
     ) {
         Text(            // cat name

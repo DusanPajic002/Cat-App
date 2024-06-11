@@ -42,8 +42,6 @@ data class Cat(
     val hypoallergenic: Int,
     val reference_image_id: String? = null,
     val url: String = "",
-
-    //weight: Weight,
-//    val imperial: String,
-//    val metric: String
+    val imperial: String,
+    val metric: String
 )
