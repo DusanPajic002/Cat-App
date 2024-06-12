@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
@@ -54,6 +55,7 @@ import com.example.mobilne2.catListP.list.model.CatListUI
 fun NavGraphBuilder.catListScreen(
     route: String,
     onItemClick: (String) -> Unit,
+    onClose: () -> Unit
 ) = composable(
     route = route
 ) {
@@ -66,6 +68,7 @@ fun NavGraphBuilder.catListScreen(
             catListViewModel.setEvent(it)
         },
         onItemClick = onItemClick,
+        onClose = onClose,
     )
 }
 
@@ -75,12 +78,21 @@ fun CatList(
     state: CatListState,
     eventPublisher: (CatListState.FilterEvent) -> Unit,
     onItemClick: (String) -> Unit,
+    onClose: () -> Unit,
 ) {
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(text = "CatList") },
+                navigationIcon = {
+                    IconButton(onClick = { onClose() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     scrolledContainerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -88,8 +100,6 @@ fun CatList(
             )
         },
         content = {
-            println("11111111111111111111111")
-            println(state.cats)
 
             CatsList(
                 paddingValues = it,

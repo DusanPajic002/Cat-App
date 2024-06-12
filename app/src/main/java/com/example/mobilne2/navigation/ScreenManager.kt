@@ -9,6 +9,7 @@ import com.example.mobilne2.catListP.list.catListScreen
 import com.example.mobilne2.catProfile.aGallery.aPhoto.catPhotoScreen
 import com.example.mobilne2.catProfile.aGallery.gallery.catGaleryScreen
 import com.example.mobilne2.catProfile.catProfileScreen
+import com.example.mobilne2.quizScreen.quizScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -19,12 +20,20 @@ fun ScreenManager() {
 
     NavHost(
         navController = navController,
-        startDestination = "cats",
+        startDestination = "navigation",
     ) {
+
+        navigationScreen(
+            route = "navigation",
+            navController = navController,
+        )
         catListScreen(
             route = "cats",
             onItemClick = {
                 navController.navigate(route = "cat/${it}")
+            },
+            onClose = {
+                navController.navigateUp()
             },
         )
         catProfileScreen(
@@ -35,7 +44,6 @@ fun ScreenManager() {
             onClose = {
                 navController.navigateUp()
             },
-
         )
         catGaleryScreen(
             route = "catGalery/{catProfileId}",
@@ -51,6 +59,13 @@ fun ScreenManager() {
             onClose = {
                 navController.navigateUp()
             },
+        )
+
+        quizScreen(
+            route = "quiz",
+            onClose = {
+                navController.navigateUp()
+            }
         )
 
     }
