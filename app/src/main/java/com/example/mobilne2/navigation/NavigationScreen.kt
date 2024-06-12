@@ -75,7 +75,7 @@ fun NavigationScreen(
                     )
                 }
                 Button(
-                    onClick = { navController.navigate(route = "leaderBord") },
+                    onClick = { navController.navigate(route = "leaderBoard") },
                     modifier = Modifier
                         .padding(8.dp)
                         .size(width = 200.dp, height = 50.dp)

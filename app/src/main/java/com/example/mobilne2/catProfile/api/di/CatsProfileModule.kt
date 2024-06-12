@@ -1,6 +1,5 @@
 package com.example.mobilne2.catProfile.api.di
 
-import com.example.mobilne2.catListP.api.CatApi
 import com.example.mobilne2.catProfile.api.CatProfileApi
 import com.example.mobilne2.catProfile.api.model.CatImageApiModel
 import dagger.Module
@@ -13,11 +12,10 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object CatsPrifleModule {
+object CatsProfileModule {
     @Provides
     @Singleton
     fun provideCatProfileApi(retrofit: Retrofit): CatProfileApi = retrofit.create()
-
     @Provides
     @Singleton
     fun provideCatImagesApi(retrofit: Retrofit): CatImageApiModel = retrofit.create()

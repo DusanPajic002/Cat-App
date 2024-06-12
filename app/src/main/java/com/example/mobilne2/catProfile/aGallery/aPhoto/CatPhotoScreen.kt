@@ -68,14 +68,14 @@ fun PhotoGalleryScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(title = {},
+            TopAppBar(title = {"Photos"},
 
-                navigationIcon = {
-                    AppIconButton(
-                        imageVector = Icons.Default.ArrowBack,
-                        onClick = onClose,
-                    )
-                })
+            navigationIcon = {
+                AppIconButton(
+                    imageVector = Icons.Default.ArrowBack,
+                    onClick = onClose,
+                )
+            })
         },
         content = { paddingValues ->
             if (state.photos.isNotEmpty()) {

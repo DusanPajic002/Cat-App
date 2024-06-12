@@ -19,6 +19,5 @@ class CatListRepostiory @Inject constructor(
     suspend fun getAllCats(): List<Cat> {
         return database.catListDao().getAll()
     }
-    suspend fun observeAllCatsProfiles() = database.catListDao().observeAll()
 
 }

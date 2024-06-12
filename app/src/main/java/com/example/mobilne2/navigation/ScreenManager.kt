@@ -9,6 +9,7 @@ import com.example.mobilne2.catListP.list.catListScreen
 import com.example.mobilne2.catProfile.aGallery.aPhoto.catPhotoScreen
 import com.example.mobilne2.catProfile.aGallery.gallery.catGaleryScreen
 import com.example.mobilne2.catProfile.catProfileScreen
+import com.example.mobilne2.leaderBoardP.leaderBoard.leaderBScreen
 import com.example.mobilne2.quizScreen.quizScreen
 
 
@@ -60,9 +61,14 @@ fun ScreenManager() {
                 navController.navigateUp()
             },
         )
-
         quizScreen(
             route = "quiz",
+            onClose = {
+                navController.navigateUp()
+            }
+        )
+        leaderBScreen(
+            route = "leaderBoard",
             onClose = {
                 navController.navigateUp()
             }

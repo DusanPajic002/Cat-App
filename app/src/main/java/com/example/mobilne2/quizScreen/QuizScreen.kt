@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -38,18 +40,13 @@ fun NavGraphBuilder.quizScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuizScreen(
     data: QuizState,
     onClose: () -> Unit,
 ) {
+
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Cat Profile") }
-            )
-        },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -58,39 +55,45 @@ fun QuizScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-                Text(
-                    text = "Cat Image",
-                    fontSize = 24.sp,
-                    modifier = Modifier.padding(16.dp)
-                )
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(null) // imageUrl
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = "Loaded image",
-                    modifier = Modifier
-                        .fillMaxSize()
-                )
-                Button(
-                    onClick = { /* Handle Button 1 Click */ },
-                    modifier = Modifier.padding(8.dp)) {
-                    Text(text = "Button 1")
-                }
-                Button(
-                    onClick = { /* Handle Button 2 Click */ },
-                    modifier = Modifier.padding(8.dp)) {
-                    Text(text = "Button 2")
-                }
-                Button(
-                    onClick = { /* Handle Button 3 Click */ },
-                    modifier = Modifier.padding(8.dp)) {
-                    Text(text = "Button 3")
-                }
-                Button(
-                    onClick = { /* Handle Button 3 Click */ },
-                    modifier = Modifier.padding(8.dp)) {
-                    Text(text = "Button 3")
+                if (!data.loading && data.questions.isNotEmpty() && data.questionNumber < 20) {
+                    Text(
+                        text = data.questions.get(data.questionNumber).question,
+                        fontSize = 24.sp,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(data.questions.get(data.questionNumber).catImage) // imageUrl
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = "Loaded image",
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+                    data.questions.get(data.questionNumber).answers.forEachIndexed { index, answer ->
+                        Button(
+                            onClick = {
+                                data.questionNumber += 1
+                            },
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .size(200.dp, 50.dp)
+                        ) {
+                            Text(text = answer)
+                        }
+                    }
+                } else if(!data.loading && data.questions.isNotEmpty() && data.questionNumber > 19){
+                    Text(
+                        text = "Your score is: ${data.score}",
+                        fontSize = 24.sp,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                } else{
+                        Text(
+                            text = "No questions available.",
+                            fontSize = 24.sp,
+                            modifier = Modifier.padding(16.dp)
+                        )
                 }
             }
         }

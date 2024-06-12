@@ -1,15 +1,23 @@
 package com.example.mobilne2.quizScreen
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.example.mobilne2.catProfile.aGallery.gallery.CatGalleryState
-import com.example.mobilne2.navigation.catProfileId
+import androidx.lifecycle.viewModelScope
+import com.example.mobilne2.catListP.db.Cat
+import com.example.mobilne2.catListP.mappers.asCatModel
+import com.example.mobilne2.catProfile.mapper.asCatImageUiModel
+import com.example.mobilne2.catProfile.mapper.asCatUiModel
+import com.example.mobilne2.catProfile.profile.CatProfileState
+import com.example.mobilne2.quizScreen.model.CatQuestion
 import com.example.mobilne2.quizScreen.repository.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
@@ -27,7 +35,75 @@ class QuizViewModel @Inject constructor(
     }
 
     private fun loadQuiz() {
+        viewModelScope.launch {
+            setState { copy(loading = true) }
+            try {
+                val allCats = withContext(Dispatchers.IO) {repository.getAllCats()}
+                val temp = allCats.flatMap { it.temperament.split(", ") }.distinct()
+                val breed = allCats.map { it.origin }.distinct()
+                val cats20 = allCats.shuffled().take(20)
 
+                setState { copy(temp = temp) }
+                setState { copy(breed = breed) }
+
+                val questions = ArrayList<CatQuestion>()
+
+                for(cat in cats20){
+                    val i = Random.nextInt(1, 4)
+                    when(i){
+                        1 -> questions.add(makeQuestions1(cat))
+                        2 -> questions.add(makeQuestions2(cat))
+                        3 -> questions.add(makeQuestions3(cat))
+                    }
+                }
+
+                setState { copy(questions = questions)}
+
+            } catch (error: Exception) {
+                println("Error loading quiz")
+            } finally {
+                setState { copy(loading = false) }
+            }
+        }
+    }
+
+    private fun makeQuestions1(cat: Cat): CatQuestion{
+        val breed = cat.origin
+        val origin = state.value.breed.filter { it != breed }.shuffled().take(3)
+        val answers = (origin + breed).shuffled()
+
+        return CatQuestion(
+            question = "What breed is the cat in the picture??",
+            catImage = cat.url,
+            correctAnswer = breed,
+            answers = answers
+        )
+    }
+
+    private fun makeQuestions2(cat: Cat): CatQuestion{
+        val catTemper = cat.temperament.split(", ").shuffled().take(3)
+        val incorrectTemper = state.value.temp.filter { it !in catTemper }.shuffled().first()
+        val answers = (catTemper + incorrectTemper).shuffled()
+
+        return CatQuestion(
+            question = "Kick the intruder out?",
+            catImage = cat.url,
+            correctAnswer = incorrectTemper,
+            answers = answers
+        )
+    }
+
+    private fun makeQuestions3(cat: Cat): CatQuestion{
+        val catTemper = cat.temperament.split(", ").shuffled().first()
+        val incorrectTemper = state.value.temp.filter { it !in catTemper }.shuffled().take(3)
+        val answers = (incorrectTemper + catTemper).shuffled()
+
+        return CatQuestion(
+            question = "Throw out the temper that does not belong?",
+            catImage = cat.url,
+            correctAnswer = cat.life_span,
+            answers = answers
+        )
     }
 
 
