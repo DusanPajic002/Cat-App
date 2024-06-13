@@ -13,6 +13,4 @@ interface LeaderBoardApi {
     // { "category": 2, "nickname": "111test", "result": 92.0, "createdAt": 1717621330048 }
 
 
-
-
 }

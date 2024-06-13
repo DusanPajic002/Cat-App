@@ -2,6 +2,7 @@ package com.example.mobilne2.leaderBoardP.leaderBoard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mobilne2.leaderBoardP.mapper.asLeaderBoardUI
 import com.example.mobilne2.leaderBoardP.repository.LeaderBoardRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,9 +30,8 @@ class LeaderBViewModel @Inject constructor(
             setState { copy(fetching = true) }
             try {
 
-
-//                val leaderBoard = repository.getLeaderBoard()
-//                setState { copy(leaderBoard = leaderBoard) }
+                val leaderBoard = repository.getLeaderBoard().map { it.asLeaderBoardUI() }
+                setState { copy(leaderBoard = leaderBoard) }
 
             } catch (error: Exception) {
                 setState { copy(error = LeaderBState.LeaderBError.DataUpdateFailed(cause = error)) }

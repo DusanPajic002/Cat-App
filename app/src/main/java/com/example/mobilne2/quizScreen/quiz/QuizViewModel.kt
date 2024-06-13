@@ -1,25 +1,21 @@
-package com.example.mobilne2.quizScreen
+package com.example.mobilne2.quizScreen.quiz
 
+import android.os.CountDownTimer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobilne2.catListP.db.Cat
-import com.example.mobilne2.catListP.list.CatListState
-import com.example.mobilne2.catListP.mappers.asCatModel
-import com.example.mobilne2.catProfile.mapper.asCatImageUiModel
-import com.example.mobilne2.catProfile.mapper.asCatUiModel
-import com.example.mobilne2.catProfile.profile.CatProfileState
+import com.example.mobilne2.leaderBoardP.db.LeaderBoard
 import com.example.mobilne2.quizScreen.model.CatQuestion
 import com.example.mobilne2.quizScreen.repository.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.Instant
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -37,6 +33,7 @@ class QuizViewModel @Inject constructor(
     fun setEvent(event: QuizState.Events) = viewModelScope.launch { events.emit(event) }
 
     init {
+        setState { copy(fullTime = 300) }
         observeEvents()
         loadQuiz()
     }
@@ -49,15 +46,34 @@ class QuizViewModel @Inject constructor(
                         setState { copy(questionNumber = it.number) }
                     }
                     is QuizState.Events.updateCorrectAnswers -> {
-                        if (it.equals(state.value.questions[state.value.questionNumber].correctAnswer)) {
+                        if (it.answer.equals(state.value.questions[state.value.questionNumber].correctAnswer)) {
                             setState { copy(score = state.value.score + 1) }
                             setState { copy(correctAnswers = state.value.correctAnswers + 1) }
                         }
                     }
                     is QuizState.Events.updateScore -> {
+                        val score = state.value.correctAnswers * 2.5 * (1 + (state.value.remainingTime + 120) / state.value.fullTime)
+                        setState { copy(score = score) }
                     }
                     is QuizState.Events.updateFinish -> {
                         setState { copy(finished = it.finished) }
+                    }
+                    is QuizState.Events.updateCancle -> {
+                        setState { copy(cancled = it.cancled) }
+                    }
+                    is QuizState.Events.publishEvent -> {
+                        setState { copy(finished = true)}
+                        if(it.publish){
+                            println("Score javno: ${state.value.score}")
+                        }else{
+                            val leaderBoardData = LeaderBoard(
+                                id = 0,
+                                nickname = "nickname",
+                                result = state.value.score,
+                                createdAt = Instant.now().epochSecond
+                            )
+                            repository.pusblishPrivate(leaderBoardData)
+                        }
                     }
                 }
             }
@@ -96,8 +112,8 @@ class QuizViewModel @Inject constructor(
                 setState { copy(questions = questions)}
 
             } catch (error: Exception) {
-                println("Error loading quiz")
             } finally {
+                timer.start()
                 setState { copy(loading = false) }
             }
         }
@@ -135,11 +151,7 @@ class QuizViewModel @Inject constructor(
         val catTemper = cat.temperament.split(", ").shuffled().first()
         val incorrectTemper = state.value.temp.filter { it !in catTemper }.shuffled().take(3)
         val answers = (incorrectTemper + catTemper).shuffled()
-        println("Breed: ---------------------")
         val catImages = repository.getAllImagesCatID(cat.id).shuffled().first()
-        println("---------------------")
-        println(catImages)
-        println("---------------------")
 
         return CatQuestion(
             question = "Throw out the temper that does not belong?",
@@ -147,6 +159,15 @@ class QuizViewModel @Inject constructor(
             correctAnswer = cat.life_span,
             answers = answers
         )
+    }
+
+    private val timer = object: CountDownTimer(5 * 60 * 1000, 1000) {
+        override fun onTick(millisUntilFinished: Long) {
+            setState { copy(remainingTime = millisUntilFinished / 1000) }
+        }
+        override fun onFinish() {
+            setEvent(QuizState.Events.updateFinish(true))
+        }
     }
 
 

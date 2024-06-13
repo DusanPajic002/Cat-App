@@ -1,27 +1,27 @@
 package com.example.mobilne2.leaderBoardP.leaderBoard
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.mobilne2.leaderBoardP.leaderBoard.model.LeaderBoardUI
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 
 fun NavGraphBuilder.leaderBScreen(
@@ -40,58 +40,103 @@ fun NavGraphBuilder.leaderBScreen(
     )
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LeaderBScreen(
     data: LeaderBState,
     onClose: () -> Unit,
 ) {
-    if (data.fetching) {
-        // Prikazi loader
-    } else if (data.error != null) {
-        // Prikazi gresku
-    } else {
-        LeaderBoardList(
-            data.leaderBoard,
-            onClose = onClose
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-fun LeaderBoardList(
-    items: List<LeaderBoardUI>,
-    onClose: () -> Unit,
-) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("LeaderBoard") },
-                navigationIcon = {
-                    IconButton(onClick = onClose) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        },
-        content = {
-            LazyColumn {
-                items(items.size) { index ->
-                    val item = items[index]
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(text = item.createdAt.toString())
-                        Text(text = item.nickname)
-                        Text(text = item.result.toString())
-                        Text(text = item.createdAt)
+    if (!data.fetching) {
+        Scaffold(
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = { Text("LeaderBoard", color = Color.White) },
+                    navigationIcon = {
+                        IconButton(onClick = { onClose() }) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Back",
+                                tint = Color.White
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = Color(0xFFE18C44)
+                    )
+                )
+            },
+            content = { paddingValues ->
+                val groupedData = data.leaderBoard.groupBy { it.category }
+                LazyColumn(
+                    contentPadding = paddingValues,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0xFFF0F0F0))
+                ) {
+                    groupedData.forEach { (category, items) ->
+                        item {
+                            val categoryName = when (category) {
+                                1 -> "Guess the Fact"
+                                2 -> "Guess the Cat"
+                                3 -> "Left or Right Cat"
+                                else -> "Unknown"
+                            }
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = categoryName,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(Color(0xFFf5d749))
+                                    .padding(16.dp),
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )
+                        }
+                        items(items.size) { index ->
+                            val item = items[index]
+                            val createdAtDateTime = LocalDateTime.ofInstant(
+                                Instant.ofEpochSecond(item.createdAt),
+                                ZoneId.systemDefault()
+                            )
+                            val formattedDate = createdAtDateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy. | HH:mm"))
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                                    .background(Color.White)
+                                    .padding(16.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column {
+                                    Text(text = item.nickname, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                                    Text(text = formattedDate, fontSize = 12.sp, color = Color.Gray)
+                                }
+                                Text(text = item.result.toString(), fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                            }
+                            if (index < items.size - 1) {
+                                Divider(color = Color(0xFFCCCCCC), thickness = 1.dp)
+                            }
+                        }
                     }
                 }
             }
+        )
+    } else {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(text = "Loading LeaderBoard...", fontSize = 24.sp)
+                Spacer(modifier = Modifier.height(16.dp))
+                CircularProgressIndicator()
+            }
         }
-    )
+    }
 }

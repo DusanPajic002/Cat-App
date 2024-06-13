@@ -4,5 +4,5 @@ data class LeaderBoardUI(
     var category: Int = 0,
     var nickname: String = "",
     var result: Double = 0.0,
-    var createdAt: String = ""
+    var createdAt: Long = 0
 )

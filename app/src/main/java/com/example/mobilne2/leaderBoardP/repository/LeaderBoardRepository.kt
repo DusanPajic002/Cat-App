@@ -1,7 +1,11 @@
 package com.example.mobilne2.leaderBoardP.repository
 
+import com.example.mobilne2.catListP.db.Cat
+import com.example.mobilne2.catProfile.db.CatImages
+import com.example.mobilne2.catProfile.mapper.asCatImageModel
 import com.example.mobilne2.database.AppDatabase
 import com.example.mobilne2.leaderBoardP.api.LeaderBoardApi
+import com.example.mobilne2.leaderBoardP.db.LeaderBoard
 import javax.inject.Inject
 
 class LeaderBoardRepository @Inject constructor(
@@ -9,5 +13,8 @@ class LeaderBoardRepository @Inject constructor(
     private val database: AppDatabase,
 ) {
 
+    suspend fun getLeaderBoard(): List<LeaderBoard> {
+        return database.leaderBoardDao().getLeaderBoard()
+    }
 
 }

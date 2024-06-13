@@ -11,7 +11,7 @@ import com.example.mobilne2.catProfile.aGallery.gallery.catGaleryScreen
 import com.example.mobilne2.catProfile.catProfileScreen
 import com.example.mobilne2.homePage.homeScreen
 import com.example.mobilne2.leaderBoardP.leaderBoard.leaderBScreen
-import com.example.mobilne2.quizScreen.quizScreen
+import com.example.mobilne2.quizScreen.quiz.quizScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)

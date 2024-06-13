@@ -68,7 +68,7 @@ fun HomeScreen(
                     ) {
                         Text(
                             text = "Quiz",
-                            fontSize = 16.sp,
+                            fontSize = 20.sp,
                         )
                     }
                     Button(
@@ -79,7 +79,7 @@ fun HomeScreen(
                     ) {
                         Text(
                             text = "Cats",
-                            fontSize = 16.sp
+                            fontSize = 20.sp,
                         )
                     }
                     Button(
@@ -90,18 +90,18 @@ fun HomeScreen(
                     ) {
                         Text(
                             text = "LeaderBord",
-                            fontSize = 16.sp,
+                            fontSize = 20.sp,
                         )
                     }
                     Button(
-                        onClick = { null }, //navController.navigate(route = "myProfile") },
+                        onClick = { null },
                         modifier = Modifier
                             .padding(8.dp)
                             .size(width = 200.dp, height = 50.dp)
                     ) {
                         Text(
                             text = "MyProfile",
-                            fontSize = 16.sp,
+                            fontSize = 20.sp,
                         )
                     }
                 }
