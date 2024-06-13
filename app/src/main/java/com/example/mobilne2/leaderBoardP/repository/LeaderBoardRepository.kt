@@ -17,8 +17,8 @@ class LeaderBoardRepository @Inject constructor(
     suspend fun getLeaderBoard(): List<LeaderBoard> {
         return database.leaderBoardDao().getLeaderBoard()
     }
-    suspend fun getLeaderBoardOnline(): List<LeaderBoardApiModel> {
-        return leaderBoardApi.getLeaderboard(1)
+    suspend fun getLeaderBoardOnline(category: Int): List<LeaderBoardApiModel> {
+        return leaderBoardApi.getLeaderboard(category)
     }
 
 }

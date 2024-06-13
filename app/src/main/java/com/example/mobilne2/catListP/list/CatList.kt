@@ -9,17 +9,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -29,14 +28,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SuggestionChip
-import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,7 +43,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.mobilne2.catListP.list.model.CatListUI
@@ -103,7 +99,7 @@ fun CatList(
         content = {
             CatsList(
                 paddingValues = it,
-                items = state.filteredCats,
+                data = state.filteredCats,
                 textfilt = state.filter,
                 eventPublisher = eventPublisher,
                 onItemClick = {
@@ -146,21 +142,18 @@ fun CatList(
     )
 }
 
-@ExperimentalMaterial3Api
 @Composable
 private fun CatsList(
-    items: List<CatListUI>,
+    data: List<CatListUI>,
     paddingValues: PaddingValues,
     eventPublisher: (CatListState.FilterEvent) -> Unit,
     textfilt: String,
     onItemClick: (String) -> Unit,
 ) {
-    val scrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current
 
     Column(
         modifier = Modifier
-            .verticalScroll(scrollState)
             .fillMaxSize()
             .padding(paddingValues)
             .clickable { focusManager.clearFocus() },
@@ -202,34 +195,22 @@ private fun CatsList(
             Text("Filter")
         }
 
-        items.forEach {
-            Column {
-                key(it.name) {
-                    CatListItem(
-                        data = it,
-                        onItemClick = onItemClick,
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(1),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 4.dp),
+            contentPadding = PaddingValues(4.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            items(data) { cat ->
+                CatListItem(
+                    data = cat,
+                    onItemClick = onItemClick
+                )
             }
         }
-    }
-}
-
-fun List<String>.pickRandom(n: Int): List<String> {
-    if (this.size <= n) return this
-    return this.shuffled().take(n)
-}
-
-@Composable
-fun SuggestionChipExample(personalityTraits: List<String>) {
-    val randomTraits = remember { personalityTraits.pickRandom(3) }
-    randomTraits.forEach { trait ->
-        SuggestionChip(
-            modifier = Modifier.padding(end = 4.dp),
-            onClick = {},
-            label = { Text(trait) },
-        )
     }
 }
 
@@ -240,8 +221,9 @@ private fun CatListItem(
 ) {
     Card(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
             .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .padding(vertical = 6.dp)
             .clickable {
                 onItemClick(data.id)
             },
@@ -286,5 +268,17 @@ private fun CatListItem(
         ) {
             SuggestionChipExample(data.temperament)
         }
+    }
+}
+
+@Composable
+fun SuggestionChipExample(personalityTraits: List<String>) {
+    val randomTraits = remember { personalityTraits.shuffled().take(3) }
+    randomTraits.forEach { trait ->
+        SuggestionChip(
+            modifier = Modifier.padding(end = 4.dp),
+            onClick = {},
+            label = { Text(trait) },
+        )
     }
 }
