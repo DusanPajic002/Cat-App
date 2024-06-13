@@ -68,8 +68,6 @@ class CatListViewModel @Inject constructor(
         viewModelScope.launch {
             setState { copy(fetching = true) }
             try {
-                //withContext(Dispatchers.IO) {repository.fetchAllCats()}
-
                 val cats = withContext(Dispatchers.IO) {repository.getAllCats()}
 
                 setState { copy(cats = cats.map { it.asCatModel() })}

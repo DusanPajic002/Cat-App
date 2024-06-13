@@ -26,5 +26,4 @@ data class CatProfileUI (
     val reference_image_id: String,
     val isRare: Boolean,
     val averageWeight: String,
-    //val imageUrl: String,
 )

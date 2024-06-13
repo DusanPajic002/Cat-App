@@ -41,10 +41,6 @@ class CatProfileViewModel @Inject constructor(
 
                 val image = withContext(Dispatchers.IO) {repository.getImagesByID(cat.reference_image_id.toString())}
                 setState { copy(image = image.asCatImageUiModel()) }
-                println("Image: $image")
-                println("Image: $image")
-                println("Image: $image")
-                println("Image: $image")
 
             } catch (error: Exception) {
                 setState { copy(catId = "") }

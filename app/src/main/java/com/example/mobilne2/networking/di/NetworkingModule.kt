@@ -21,10 +21,6 @@ object NetworkingModule {
     @Provides
     fun provideOkHttpClient() : OkHttpClient {
         return OkHttpClient.Builder()
-            /*
-             * Order of okhttp interceptors is important.
-             * If logging was first it would not log the custom header.
-             */
             .addInterceptor {
                 val updatedRequest = it.request().newBuilder()
                     .addHeader("CustomHeader", "CustomValue")
