@@ -1,6 +1,6 @@
 package com.example.mobilne2.leaderBoardP.mapper
 
-import com.example.mobilne2.leaderBoardP.api.LeaderBoardApiModel
+import com.example.mobilne2.leaderBoardP.api.model.LeaderBoardApiModel
 import com.example.mobilne2.leaderBoardP.db.LeaderBoard
 import com.example.mobilne2.leaderBoardP.leaderBoard.model.LeaderBoardUI
 

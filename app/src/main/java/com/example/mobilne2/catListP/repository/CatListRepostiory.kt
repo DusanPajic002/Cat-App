@@ -11,7 +11,12 @@ class CatListRepostiory @Inject constructor(
     private val database: AppDatabase,
 ) {
 
-    suspend fun fetchAllCats() {
+    suspend fun fetchAllCats() : Boolean{
+        val cats = catsApi.getAllCats()
+        database.catListDao().insertAll(cats = cats.map { it.asCatDbModel() })
+        return true;
+    }
+    suspend fun fetchAllImages() {
         val cats = catsApi.getAllCats()
         database.catListDao().insertAll(cats = cats.map { it.asCatDbModel() })
     }

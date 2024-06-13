@@ -9,6 +9,7 @@ import com.example.mobilne2.catListP.list.catListScreen
 import com.example.mobilne2.catProfile.aGallery.aPhoto.catPhotoScreen
 import com.example.mobilne2.catProfile.aGallery.gallery.catGaleryScreen
 import com.example.mobilne2.catProfile.catProfileScreen
+import com.example.mobilne2.homePage.homeScreen
 import com.example.mobilne2.leaderBoardP.leaderBoard.leaderBScreen
 import com.example.mobilne2.quizScreen.quizScreen
 
@@ -21,11 +22,11 @@ fun ScreenManager() {
 
     NavHost(
         navController = navController,
-        startDestination = "navigation",
+        startDestination = "homeScreen",
     ) {
 
-        navigationScreen(
-            route = "navigation",
+        homeScreen(
+            route = "homeScreen",
             navController = navController,
         )
         catListScreen(

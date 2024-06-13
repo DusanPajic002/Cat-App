@@ -30,7 +30,6 @@ class CatListViewModel @Inject constructor(
 
     private val events = MutableSharedFlow<FilterEvent>()
     fun setEvent(event: FilterEvent) = viewModelScope.launch { events.emit(event) }
-
     init {
         observeEvents()
         fetchCats()
@@ -40,7 +39,9 @@ class CatListViewModel @Inject constructor(
         viewModelScope.launch {
             events.collect {
                 when (it) {
-                    is FilterEvent.filterClick -> {filterEvent(filter = state.value.filter)}
+                    is FilterEvent.filterClick -> {
+                        filterEvent(filter = state.value.filter)
+                    }
                     is FilterEvent.filterEvent -> {
                         setState {
                             copy(filter = it.textfilt)
@@ -67,7 +68,7 @@ class CatListViewModel @Inject constructor(
         viewModelScope.launch {
             setState { copy(fetching = true) }
             try {
-                withContext(Dispatchers.IO) {repository.fetchAllCats()}
+                //withContext(Dispatchers.IO) {repository.fetchAllCats()}
 
                 val cats = withContext(Dispatchers.IO) {repository.getAllCats()}
 

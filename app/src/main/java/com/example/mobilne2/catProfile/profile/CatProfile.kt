@@ -150,18 +150,18 @@ private fun CatData(
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
         )
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(imageUrl)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "Loaded image",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clickable {
-                         onItemClick(cat.id)
-                    }
-            )
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(imageUrl)
+                .crossfade(true)
+                .build(),
+            contentDescription = "Loaded image",
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable {
+                     onItemClick(cat.id)
+                }
+        )
         Text(
             modifier = Modifier
                 .padding(8.dp),
