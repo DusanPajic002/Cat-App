@@ -5,6 +5,7 @@ import com.example.mobilne2.catProfile.db.CatImages
 import com.example.mobilne2.catProfile.mapper.asCatImageModel
 import com.example.mobilne2.database.AppDatabase
 import com.example.mobilne2.leaderBoardP.api.LeaderBoardApi
+import com.example.mobilne2.leaderBoardP.api.model.LeaderBoardApiModel
 import com.example.mobilne2.leaderBoardP.db.LeaderBoard
 import javax.inject.Inject
 
@@ -15,6 +16,9 @@ class LeaderBoardRepository @Inject constructor(
 
     suspend fun getLeaderBoard(): List<LeaderBoard> {
         return database.leaderBoardDao().getLeaderBoard()
+    }
+    suspend fun getLeaderBoardOnline(): List<LeaderBoardApiModel> {
+        return leaderBoardApi.getLeaderboard(1)
     }
 
 }

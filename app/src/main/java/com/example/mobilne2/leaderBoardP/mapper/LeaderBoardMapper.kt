@@ -13,11 +13,12 @@ fun LeaderBoard.asLeaderBoardUI(): LeaderBoardUI {
     )
 }
 
-fun LeaderBoardApiModel.asLeaderBoard(): LeaderBoard {
-    return LeaderBoard(
+fun LeaderBoardApiModel.asLeaderBoardUI(): LeaderBoardUI {
+    return LeaderBoardUI(
         category = category,
         nickname = nickname,
         result = result,
         createdAt = createdAt
     )
 }
+

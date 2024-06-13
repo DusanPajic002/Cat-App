@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
@@ -141,6 +142,7 @@ private fun CatData(
             .verticalScroll(scrollState)
             .fillMaxSize()
             .padding(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE7E8E4))
     ) {
         Text(
             modifier = Modifier

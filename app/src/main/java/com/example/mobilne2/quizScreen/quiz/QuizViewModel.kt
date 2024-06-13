@@ -4,6 +4,7 @@ import android.os.CountDownTimer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobilne2.catListP.db.Cat
+import com.example.mobilne2.leaderBoardP.api.model.LeaderBoardReq
 import com.example.mobilne2.leaderBoardP.db.LeaderBoard
 import com.example.mobilne2.quizScreen.model.CatQuestion
 import com.example.mobilne2.quizScreen.repository.QuizRepository
@@ -34,6 +35,7 @@ class QuizViewModel @Inject constructor(
 
     init {
         setState { copy(fullTime = 300) }
+        setState { copy(category = 1) }
         observeEvents()
         loadQuiz()
     }
@@ -64,10 +66,14 @@ class QuizViewModel @Inject constructor(
                     is QuizState.Events.publishEvent -> {
                         setState { copy(finished = true)}
                         if(it.publish){
-                            println("Score javno: ${state.value.score}")
+                            val leaderBoardData = LeaderBoardReq (
+                                nickname = "nickname",
+                                result = state.value.score,
+                                category = state.value.category,
+                            )
+                            println(repository.pusblishOnline(leaderBoardData))
                         }else{
                             val leaderBoardData = LeaderBoard(
-                                id = 0,
                                 nickname = "nickname",
                                 result = state.value.score,
                                 createdAt = Instant.now().epochSecond
@@ -87,14 +93,15 @@ class QuizViewModel @Inject constructor(
                 val allCats = withContext(Dispatchers.IO) {repository.getAllCats()}
                 val temp = allCats.flatMap { it.temperament.split(", ") }.distinct()
                 val breed = allCats.map { it.origin }.distinct()
-                val cats20 = allCats.shuffled().take(20)
+                val cats20 = allCats.filter { !it.id.equals("mala") }.shuffled().take(20)
 
                 cats20.forEach { cat ->
                     withContext(Dispatchers.IO) {
                         repository.featchAllImagesCatID(cat.id)
                     }
                 }
-
+                println(cats20.size)
+                println("-------------------")
                 setState { copy(temp = temp) }
                 setState { copy(breed = breed) }
 
@@ -134,9 +141,9 @@ class QuizViewModel @Inject constructor(
     }
 
     private suspend fun makeQuestions2(cat: Cat): CatQuestion{
-        val catTemper = cat.temperament.split(", ").shuffled().take(3)
+        val catTemper = cat.temperament.split(", ")
         val incorrectTemper = state.value.temp.filter { it !in catTemper }.shuffled().first()
-        val answers = (catTemper + incorrectTemper).shuffled()
+        val answers = (catTemper.shuffled().take(3) + incorrectTemper).shuffled()
         val catImages = repository.getAllImagesCatID(cat.id).shuffled().first()
 
         return CatQuestion(
@@ -148,9 +155,9 @@ class QuizViewModel @Inject constructor(
     }
 
     private suspend fun makeQuestions3(cat: Cat): CatQuestion{
-        val catTemper = cat.temperament.split(", ").shuffled().first()
+        val catTemper = cat.temperament.split(", ")
         val incorrectTemper = state.value.temp.filter { it !in catTemper }.shuffled().take(3)
-        val answers = (incorrectTemper + catTemper).shuffled()
+        val answers = (incorrectTemper + catTemper.shuffled().first()).shuffled()
         val catImages = repository.getAllImagesCatID(cat.id).shuffled().first()
 
         return CatQuestion(

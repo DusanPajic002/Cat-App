@@ -67,7 +67,7 @@ fun LeaderBScreen(
                 )
             },
             content = { paddingValues ->
-                val groupedData = data.leaderBoard.groupBy { it.category }
+                val groupedData = data.leaderBoardOnline.groupBy { it.category }
                 LazyColumn(
                     contentPadding = paddingValues,
                     modifier = Modifier
@@ -104,21 +104,28 @@ fun LeaderBScreen(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(16.dp)
+                                    .padding(14.dp)
                                     .background(Color.White)
                                     .padding(16.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Column {
-                                    Text(text = item.nickname, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                                    Text(text = formattedDate, fontSize = 12.sp, color = Color.Gray)
+                                    Text(
+                                        text = "${index + 1}. ${item.nickname}",
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 18.sp)
+                                    Text(
+                                        text = formattedDate,
+                                        fontSize = 12.sp,
+                                        color = Color.Gray)
                                 }
-                                Text(text = item.result.toString(), fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                                Text(
+                                    text = item.result.toString(),
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 18.sp)
                             }
-                            if (index < items.size - 1) {
-                                Divider(color = Color(0xFFCCCCCC), thickness = 1.dp)
-                            }
+
                         }
                     }
                 }

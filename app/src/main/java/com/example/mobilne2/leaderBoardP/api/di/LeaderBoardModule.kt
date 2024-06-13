@@ -1,6 +1,7 @@
 package com.example.mobilne2.leaderBoardP.api.di
 
 import com.example.mobilne2.leaderBoardP.api.LeaderBoardApi
+import com.example.mobilne2.networking.LeaderboardApiClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,5 +15,5 @@ import javax.inject.Singleton
 object LeaderBoardModule {
     @Provides
     @Singleton
-    fun provideLeaderBoardApi(retrofit: Retrofit): LeaderBoardApi = retrofit.create()
+    fun provideLeaderBoardApi(@LeaderboardApiClient retrofit: Retrofit): LeaderBoardApi = retrofit.create()
 }

@@ -4,8 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LeaderBoardApiModel(
-    var category: Int = 0,
-    var nickname: String = "",
-    var result: Double = 0.0,
-    var createdAt: Long = 0
+    val category: Int = 0,
+    val nickname: String = "",
+    val result: Double = 0.0,
+    val createdAt: Long = 0
 )

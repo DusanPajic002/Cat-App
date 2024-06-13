@@ -6,11 +6,13 @@ import com.example.mobilne2.catProfile.db.CatImages
 import com.example.mobilne2.catProfile.mapper.asCatImageModel
 import com.example.mobilne2.database.AppDatabase
 import com.example.mobilne2.leaderBoardP.api.LeaderBoardApi
+import com.example.mobilne2.leaderBoardP.api.model.LeaderBoardReq
 import com.example.mobilne2.leaderBoardP.db.LeaderBoard
 import javax.inject.Inject
 
 class QuizRepository @Inject constructor(
     private val catProfileApi: CatProfileApi,
+    private val leaderBoardApi: LeaderBoardApi,
     private val database: AppDatabase,
 ) {
 
@@ -29,6 +31,9 @@ class QuizRepository @Inject constructor(
 
     suspend fun pusblishPrivate(leaderBoard: LeaderBoard){
        database.leaderBoardDao().insertToLeaderBoard(leaderBoard)
+    }
+    suspend fun pusblishOnline(leaderBoard: LeaderBoardReq){
+        return leaderBoardApi.publishLeaderBoard(leaderBoard)
     }
 
 }

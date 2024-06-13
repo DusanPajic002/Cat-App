@@ -1,6 +1,5 @@
 package com.example.mobilne2.catListP.list
 
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,16 +19,17 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
@@ -46,12 +46,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.mobilne2.catListP.list.model.CatListUI
-
 
 @ExperimentalMaterial3Api
 fun NavGraphBuilder.catListScreen(
@@ -82,17 +80,17 @@ fun CatList(
     onItemClick: (String) -> Unit,
     onClose: () -> Unit,
 ) {
-
     Scaffold(
         topBar = {
             Column {
                 CenterAlignedTopAppBar(
-                    title = { Text(text = "CatList") },
+                    title = { Text(text = "CatList", color = Color.White) },
                     navigationIcon = {
                         IconButton(onClick = { onClose() }) {
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,
                                 contentDescription = "Back",
+                                tint = Color.White,
                             )
                         }
                     },
@@ -103,7 +101,6 @@ fun CatList(
             }
         },
         content = {
-
             CatsList(
                 paddingValues = it,
                 items = state.filteredCats,
@@ -145,7 +142,6 @@ fun CatList(
                     }
                 }
             }
-
         }
     )
 }
@@ -198,7 +194,6 @@ private fun CatsList(
             onClick = {
                 focusManager.clearFocus()
                 eventPublisher(CatListState.FilterEvent.filterClick)
-
             },
             modifier = Modifier
                 .width(150.dp)
@@ -218,7 +213,6 @@ private fun CatsList(
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
-
     }
 }
 
@@ -226,6 +220,7 @@ fun List<String>.pickRandom(n: Int): List<String> {
     if (this.size <= n) return this
     return this.shuffled().take(n)
 }
+
 @Composable
 fun SuggestionChipExample(personalityTraits: List<String>) {
     val randomTraits = remember { personalityTraits.pickRandom(3) }
@@ -233,7 +228,7 @@ fun SuggestionChipExample(personalityTraits: List<String>) {
         SuggestionChip(
             modifier = Modifier.padding(end = 4.dp),
             onClick = {},
-            label = { Text(trait) }
+            label = { Text(trait) },
         )
     }
 }
@@ -250,14 +245,15 @@ private fun CatListItem(
             .clickable {
                 onItemClick(data.id)
             },
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE7E8E4))
     ) {
-        Text(            // cat name
+        Text(
             modifier = Modifier.padding(all = 16.dp),
             text = data.name,
             fontWeight = FontWeight.ExtraBold,
             fontSize = 18.sp,
         )
-        Row { // alternative names
+        Row {
             Text(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
@@ -266,7 +262,7 @@ private fun CatListItem(
                 text = data.alt_names,
             )
         }
-        Row { // description
+        Row {
             Text(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
@@ -282,10 +278,12 @@ private fun CatListItem(
                 imageVector = Icons.Default.KeyboardArrowRight,
                 contentDescription = null,
             )
-        }   //personalityTraits
-        Row(modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .padding(bottom = 8.dp)) { // personality traits
+        }
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 8.dp)
+        ) {
             SuggestionChipExample(data.temperament)
         }
     }

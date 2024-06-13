@@ -11,6 +11,7 @@ data class QuizState(
     val finished: Boolean = false,
     val cancled: Boolean = false,
     val correctAnswers: Int = 0,
+    val category: Int = 0,
     val temp: List<String> = emptyList(),
     val breed: List<String> = emptyList(),
     val questions: List<CatQuestion> = emptyList()

@@ -1,16 +1,23 @@
 package com.example.mobilne2.leaderBoardP.api
 
+import com.example.mobilne2.leaderBoardP.api.model.LeaderBoardApiModel
 import com.example.mobilne2.leaderBoardP.api.model.LeaderBoardReq
+import com.example.mobilne2.leaderBoardP.db.LeaderBoard
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface LeaderBoardApi {
 
-    //{ "nickname": "rma", "result": 88.88, "category": 1 }
-    @POST("leaderboard")
-    suspend fun addToLeaderBoard(@Body leaderBoardReq: LeaderBoardReq)
+    @GET("leaderboard")
+    suspend fun getLeaderboard(
+        @Query("category") category: Int
+    ): List<LeaderBoardApiModel>
 
-    // { "category": 2, "nickname": "111test", "result": 92.0, "createdAt": 1717621330048 }
+    @POST("leaderboard")
+    suspend fun publishLeaderBoard(
+        @Body quizResult: LeaderBoardReq )
 
 
 }
