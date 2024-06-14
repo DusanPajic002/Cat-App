@@ -17,4 +17,8 @@ class UserRepostiory @Inject constructor(
         database.userDao().insertUser(user)
     }
 
+    suspend fun getUserByID(id : Int): User {
+        return database.userDao().getUserByID(id)
+    }
+
 }

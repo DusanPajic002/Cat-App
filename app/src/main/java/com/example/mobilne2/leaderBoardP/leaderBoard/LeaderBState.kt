@@ -10,12 +10,12 @@ data class LeaderBState (
     val dataPerPage : Int = 8,
     val leaderBoardOnline: List<LeaderBoardUI> = emptyList(),
     val leaderBoardOnlinePerPage: List<LeaderBoardUI> = emptyList(),
-    val error: LeaderBError? = null,
+    val error: Error? = null,
 ) {
     sealed class Events {
         data class changePage(val changePage: Int) : Events()
     }
-    sealed class LeaderBError {
-        data class DataUpdateFailed(val cause: Throwable? = null) : LeaderBError()
+    sealed class Error {
+        data object LeaderBoardFailed : Error()
     }
 }

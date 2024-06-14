@@ -15,8 +15,8 @@ class LeaderBoardRepository @Inject constructor(
     private val database: AppDatabase,
 ) {
 
-    suspend fun getLeaderBoard(): List<LeaderBoard> {
-        return database.leaderBoardDao().getLeaderBoard()
+    suspend fun getPLBbyNickName(nickname: String): List<LeaderBoard> {
+        return database.leaderBoardDao().getPLBbyNickName(nickname)
     }
     suspend fun getLeaderBoardOnline(category: Int): List<LeaderBoardApiModel> {
         return leaderBoardApi.getLeaderboard(category)

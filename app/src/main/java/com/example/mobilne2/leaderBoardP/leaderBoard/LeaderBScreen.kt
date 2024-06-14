@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+
 fun NavGraphBuilder.leaderBScreen(
     route: String,
     onClose: () -> Unit,
@@ -48,18 +49,7 @@ fun LeaderBScreen(
     eventPublisher: (LeaderBState.Events) -> Unit,
     onClose: () -> Unit,
 ) {
-//    if(data.error != null && data.error is QuizState.Error.ErrorToLoadQuiz) {
-//        Text(text = "Error to load quiz.", fontSize = 24.sp)
-//        Spacer(modifier = Modifier.height(16.dp))
-//        Button(onClick = {
-//            onClose()
-//        },
-//            modifier = Modifier.padding(8.dp).size(145.dp, 47.dp)
-//        ){
-//            Text(text = "Go to Home")
-//        }
-//    }
-    if (!data.fetching) {
+
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
@@ -79,102 +69,118 @@ fun LeaderBScreen(
                 )
             },
             content = { paddingValues ->
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = paddingValues.calculateTopPadding())
-                        .background(Color(0xFFF0F0FF))
-                        .padding(bottom = 60.dp),
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    pageChanger(
-                        data = data,
-                        eventPublisher = eventPublisher
-                    )
-
-                    LazyColumn(
-                        modifier = Modifier
-                            .background(Color(0xFFF0F0FF))
-                    ) {
-                        val groupedData = data.leaderBoardOnlinePerPage.groupBy { it.category }
-                        groupedData.forEach { (category, items) ->
-                            item {
-                                val categoryName = when (category) {
-                                    1 -> "Guess the Fact"
-                                    2 -> "Guess the Cat"
-                                    3 -> "Left or Right Cat"
-                                    else -> "Unknown"
-                                }
-                                Text(
-                                    text = categoryName,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .background(Color(0xFFf5d749))
-                                        .padding(16.dp),
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 20.sp
-                                )
-                                Spacer(modifier = Modifier.height(14.dp))
+                if(data.error != null) {
+                    when(data.error) {
+                        is LeaderBState.Error.LeaderBoardFailed -> {
+                            Text(text = "Error to load leaderboard.", fontSize = 24.sp)
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Button(onClick = {
+                                onClose()
+                            },
+                                modifier = Modifier.padding(8.dp).size(145.dp, 47.dp)
+                            ){
+                                Text(text = "Go to Home")
                             }
-                            items(items.size) { index ->
-                                val player = items[index]
-                                println(player.createdAt)
-                                println("-----------------")
-                                val date = Date(player.createdAt)
-                                val format = SimpleDateFormat("dd.MM.yyyy. | HH:mm", Locale.getDefault())
-                                val formattedTime = format.format(date)
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(14.dp)
-                                        .background(Color.White)
-                                        .padding(16.dp),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Column {
-                                        val rank = index + 1 +  (data.page-1)*data.dataPerPage
+                        }
+                    }
+                } else if (!data.fetching) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = paddingValues.calculateTopPadding())
+                            .background(Color(0xFFF0F0FF))
+                            .padding(bottom = 60.dp),
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        pageChanger(
+                            data = data,
+                            eventPublisher = eventPublisher
+                        )
+
+                        LazyColumn(
+                            modifier = Modifier
+                                .background(Color(0xFFF0F0FF))
+                        ) {
+                            val groupedData = data.leaderBoardOnlinePerPage.groupBy { it.category }
+                            groupedData.forEach { (category, items) ->
+                                item {
+                                    val categoryName = when (category) {
+                                        1 -> "Guess the Fact"
+                                        2 -> "Guess the Cat"
+                                        3 -> "Left or Right Cat"
+                                        else -> "Unknown"
+                                    }
+                                    Text(
+                                        text = categoryName,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .background(Color(0xFFf5d749))
+                                            .padding(16.dp),
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 20.sp
+                                    )
+                                    Spacer(modifier = Modifier.height(14.dp))
+                                }
+                                items(items.size) { index ->
+                                    val player = items[index]
+                                    println(player.createdAt)
+                                    println("-----------------")
+                                    val date = Date(player.createdAt)
+                                    val format =
+                                        SimpleDateFormat("dd.MM.yyyy. | HH:mm", Locale.getDefault())
+                                    val formattedTime = format.format(date)
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(14.dp)
+                                            .background(Color.White)
+                                            .padding(16.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Column {
+                                            val rank =
+                                                index + 1 + (data.page - 1) * data.dataPerPage
+                                            Text(
+                                                text = "${rank}. ${player.nickname}",
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 18.sp
+                                            )
+                                            Text(
+                                                text = formattedTime,
+                                                fontSize = 12.sp,
+                                                color = Color.Gray
+                                            )
+                                        }
                                         Text(
-                                            text = "${rank}. ${player.nickname}",
+                                            text = player.result.toString(),
                                             fontWeight = FontWeight.Bold,
                                             fontSize = 18.sp
                                         )
-                                        Text(
-                                            text = formattedTime,
-                                            fontSize = 12.sp,
-                                            color = Color.Gray
-                                        )
                                     }
-                                    Text(
-                                        text = player.result.toString(),
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 18.sp
-                                    )
                                 }
                             }
+                        }
+                    }
+                } else {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(text = "Loading LeaderBoard...", fontSize = 24.sp)
+                            Spacer(modifier = Modifier.height(16.dp))
+                            CircularProgressIndicator()
                         }
                     }
                 }
             }
         )
-    } else {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(text = "Loading LeaderBoard...", fontSize = 24.sp)
-                Spacer(modifier = Modifier.height(16.dp))
-                CircularProgressIndicator()
-            }
-        }
-    }
 }
 
 @Composable
