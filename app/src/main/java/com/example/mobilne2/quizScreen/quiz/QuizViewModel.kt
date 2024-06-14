@@ -67,14 +67,14 @@ class QuizViewModel @Inject constructor(
                         setState { copy(finished = true)}
                         if(it.publish){
                             val leaderBoardData = LeaderBoardReq (
-                                nickname = "nickname",
+                                nickname = state.value.userNickname,
                                 result = state.value.score,
                                 category = state.value.category,
                             )
-                            println(repository.pusblishOnline(leaderBoardData))
+                            repository.pusblishOnline(leaderBoardData)
                         }else{
                             val leaderBoardData = LeaderBoard(
-                                nickname = "nickname",
+                                nickname = state.value.userNickname,
                                 result = state.value.score,
                                 createdAt = Instant.now().epochSecond
                             )
@@ -94,14 +94,16 @@ class QuizViewModel @Inject constructor(
                 val temp = allCats.flatMap { it.temperament.split(", ") }.distinct()
                 val breed = allCats.map { it.origin }.distinct()
                 val cats20 = allCats.filter { !it.id.equals("mala") }.shuffled().take(20)
+                val user = repository.getUserByID(1)
+                if(user != null)
+                    setState { copy(userNickname = user.nickname)}
 
                 cats20.forEach { cat ->
                     withContext(Dispatchers.IO) {
                         repository.featchAllImagesCatID(cat.id)
                     }
                 }
-                println(cats20.size)
-                println("-------------------")
+
                 setState { copy(temp = temp) }
                 setState { copy(breed = breed) }
 
@@ -119,6 +121,7 @@ class QuizViewModel @Inject constructor(
                 setState { copy(questions = questions)}
 
             } catch (error: Exception) {
+                setState { copy(error = QuizState.Error.ErrorToLoadQuiz) }
             } finally {
                 timer.start()
                 setState { copy(loading = false) }
@@ -168,7 +171,7 @@ class QuizViewModel @Inject constructor(
         )
     }
 
-    private val timer = object: CountDownTimer(5 * 60 * 1000, 1000) {
+    private val timer = object: CountDownTimer((state.value.fullTime * 1000).toLong(), 1000) {
         override fun onTick(millisUntilFinished: Long) {
             setState { copy(remainingTime = millisUntilFinished / 1000) }
         }

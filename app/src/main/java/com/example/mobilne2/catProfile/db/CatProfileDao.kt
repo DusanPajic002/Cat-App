@@ -27,5 +27,4 @@ interface CatProfileDao {
     @Query("SELECT * FROM CatImages WHERE id = :id")
     suspend fun getImagesByID(id: String): CatImages
 
-
 }

@@ -12,6 +12,7 @@ import com.example.mobilne2.catProfile.catProfileScreen
 import com.example.mobilne2.homePage.homeScreen
 import com.example.mobilne2.leaderBoardP.leaderBoard.leaderBScreen
 import com.example.mobilne2.quizScreen.quiz.quizScreen
+import com.example.mobilne2.userPage.registration.registerScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -22,9 +23,15 @@ fun ScreenManager() {
 
     NavHost(
         navController = navController,
-        startDestination = "homeScreen",
+        startDestination = "registerScreen",
     ) {
 
+        registerScreen(
+            route = "registerScreen",
+            onItemClick = {
+                navController.navigate(route = "homeScreen")
+            },
+        )
         homeScreen(
             route = "homeScreen",
             navController = navController,

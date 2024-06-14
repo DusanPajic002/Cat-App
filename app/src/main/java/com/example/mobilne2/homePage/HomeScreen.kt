@@ -89,7 +89,7 @@ fun HomeScreen(
                             .size(width = 200.dp, height = 50.dp)
                     ) {
                         Text(
-                            text = "LeaderBord",
+                            text = "LeaderBoard",
                             fontSize = 20.sp,
                         )
                     }

@@ -15,8 +15,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import coil.compose.rememberImagePainter
+import com.example.mobilne2.userPage.registration.UserState
 
 fun NavGraphBuilder.quizScreen(
     route: String,
@@ -56,7 +59,6 @@ fun QuizScreen(
     eventPublisher: (QuizState.Events) -> Unit,
     onClose: () -> Unit,
 ) {
-
     Scaffold(
         content = { paddingValues ->
             Column(
@@ -66,7 +68,17 @@ fun QuizScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-                if (!data.loading && !data.finished && !data.cancled) {
+                if(data.error != null && data.error is QuizState.Error.ErrorToLoadQuiz) {
+                    Text(text = "Error to load quiz.", fontSize = 24.sp)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = {
+                            onClose()
+                        },
+                        modifier = Modifier.padding(8.dp).size(145.dp, 47.dp)
+                    ){
+                        Text(text = "Go to Home")
+                    }
+                }else if (!data.loading && !data.finished && !data.cancled) {
                     val questionInfo = data.questions[data.questionNumber]
                     Text(
                         text = "${data.remainingTime / 60} : ${data.remainingTime % 60}",

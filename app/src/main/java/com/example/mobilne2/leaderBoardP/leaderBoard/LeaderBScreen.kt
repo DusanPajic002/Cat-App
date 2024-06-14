@@ -2,7 +2,6 @@ package com.example.mobilne2.leaderBoardP.leaderBoard
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -20,10 +19,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -53,6 +48,17 @@ fun LeaderBScreen(
     eventPublisher: (LeaderBState.Events) -> Unit,
     onClose: () -> Unit,
 ) {
+//    if(data.error != null && data.error is QuizState.Error.ErrorToLoadQuiz) {
+//        Text(text = "Error to load quiz.", fontSize = 24.sp)
+//        Spacer(modifier = Modifier.height(16.dp))
+//        Button(onClick = {
+//            onClose()
+//        },
+//            modifier = Modifier.padding(8.dp).size(145.dp, 47.dp)
+//        ){
+//            Text(text = "Go to Home")
+//        }
+//    }
     if (!data.fetching) {
         Scaffold(
             topBar = {
@@ -73,6 +79,7 @@ fun LeaderBScreen(
                 )
             },
             content = { paddingValues ->
+
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
