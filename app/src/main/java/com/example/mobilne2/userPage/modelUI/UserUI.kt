@@ -1,4 +1,4 @@
-package com.example.mobilne2.userPage.registration.model
+package com.example.mobilne2.userPage.modelUI
 
 
 data class UserUI(

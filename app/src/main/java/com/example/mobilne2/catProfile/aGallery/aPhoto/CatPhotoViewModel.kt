@@ -47,11 +47,8 @@ class CatPhotoViewModel  @Inject constructor(
                 setState { copy(photos = images.map { it.asCatImageUiModel() }) }
                 setState { copy(imageIndex = imageIndex.toString())}
 
-
             } catch (error: Exception) {
-                setState { copy(catID = "")}
-                setState { copy(imageIndex = "")}
-                setState { copy(error = CatPhotoState.DetailsError.DataUpdateFailed(cause = error)) }
+                setState { copy(error = CatPhotoState.Error.LoadingPhotoError) }
             } finally {
                 setState {
                     copy(fetching = false)

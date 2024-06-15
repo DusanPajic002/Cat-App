@@ -3,12 +3,21 @@ package com.example.mobilne2.catProfile.aGallery.aPhoto
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,10 +30,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -44,7 +55,7 @@ fun NavGraphBuilder.catPhotoScreen(
     val state = photoGalleryViewModel.state.collectAsState()
 
     PhotoGalleryScreen(
-        state = state.value,
+        data = state.value,
         onClose = onClose,
     )
 }
@@ -52,16 +63,16 @@ fun NavGraphBuilder.catPhotoScreen(
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PhotoGalleryScreen(
-    state: CatPhotoState,
+    data: CatPhotoState,
     onClose: () -> Unit,
 ) {
     val pagerState = rememberPagerState(
-        pageCount = { state.photos.size }
+        pageCount = { data.photos.size }
     )
 
-    LaunchedEffect(state.photos, state.imageIndex) {
-        if (state.photos.isNotEmpty()) {
-            state.imageIndex.let { pagerState.scrollToPage(it.toInt()) }
+    LaunchedEffect(data.photos, data.imageIndex) {
+        if (data.photos.isNotEmpty()) {
+            data.imageIndex.let { pagerState.scrollToPage(it.toInt()) }
         }
     }
 
@@ -78,16 +89,37 @@ fun PhotoGalleryScreen(
             })
         },
         content = { paddingValues ->
-            if (state.photos.isNotEmpty()) {
+
+            if ( data.error != null) {
+                if(data.error is CatPhotoState.Error.LoadingPhotoError) {
+                    Row(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = "No photos found",
+                            fontSize = 24.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(16.dp),
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                        Button(
+                            onClick = { onClose }
+                        ) {
+                            Text("Go back")
+                        }
+                    }
+                }
+            }else if(!data.fetching) {
                 HorizontalPager(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = paddingValues,
                     pageSize = PageSize.Fill,
                     pageSpacing = 16.dp,
                     state = pagerState,
-                    key = { state.photos[it].id }
+                    key = { data.photos[it].id }
                 ) { pageIndex ->
-                    val image = state.photos[pageIndex]
+                    val image = data.photos[pageIndex]
                     PhotoPreview(
                         modifier = Modifier,
                         url = image.url,
@@ -95,12 +127,27 @@ fun PhotoGalleryScreen(
                         showTitle = false,
                     )
                 }
-            } else {
-                Text(
-                    modifier = Modifier.fillMaxSize(),
-                    text = "No images.",
-                )
+            }else {
+                LoadingPhotos()
             }
+
         },
     )
+}
+
+@Composable
+fun LoadingPhotos() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = "Loading photo...", fontSize = 24.sp)
+            Spacer(modifier = Modifier.height(16.dp))
+            CircularProgressIndicator()
+        }
+    }
 }

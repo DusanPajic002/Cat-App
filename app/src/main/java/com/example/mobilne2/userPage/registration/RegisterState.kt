@@ -1,6 +1,6 @@
 package com.example.mobilne2.userPage.registration
 
-data class UserState(
+data class RegisterState(
     val fatching: Boolean = false,
     val exist: Boolean = false,
     val error: Error? = null,
@@ -12,6 +12,7 @@ data class UserState(
     }
 
     sealed class Error {
+        data object LoadingFaild : Error()
         data object MissingParts : Error()
         data object BadFullName: Error()
         data object BadNickname : Error()

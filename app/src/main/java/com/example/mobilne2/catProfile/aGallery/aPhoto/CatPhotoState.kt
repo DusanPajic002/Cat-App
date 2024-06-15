@@ -7,9 +7,9 @@ data class CatPhotoState (
     val catID: String = "",
     val imageIndex: String = "",
     val photos: List<CatImageUI> = emptyList(),
-    val error: DetailsError? = null,
+    val error: Error? = null,
 ) {
-    sealed class DetailsError {
-        data class DataUpdateFailed(val cause: Throwable? = null) : DetailsError()
+    sealed class Error {
+        data object LoadingPhotoError : Error()
     }
 }

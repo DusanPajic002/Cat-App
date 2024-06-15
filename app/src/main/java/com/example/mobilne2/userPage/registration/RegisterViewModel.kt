@@ -2,7 +2,6 @@ package com.example.mobilne2.userPage.registration
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mobilne2.leaderBoardP.mapper.asLeaderBoardUI
 import com.example.mobilne2.userPage.db.User
 import com.example.mobilne2.userPage.repository.UserRepostiory
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,17 +13,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UserViewModel @Inject constructor(
+class RegisterViewModel @Inject constructor(
     private val repository: UserRepostiory,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(UserState())
+    private val _state = MutableStateFlow(RegisterState())
     val state = _state.asStateFlow()
-    private fun setState(reducer: UserState.() -> UserState) =
+    private fun setState(reducer: RegisterState.() -> RegisterState) =
         _state.getAndUpdate(reducer)
 
-    private val events = MutableSharedFlow<UserState.Events>()
-    fun setEvent(event: UserState.Events) = viewModelScope.launch { events.emit(event) }
+    private val events = MutableSharedFlow<RegisterState.Events>()
+    fun setEvent(event: RegisterState.Events) = viewModelScope.launch { events.emit(event) }
 
     init {
         observeEvents()
@@ -35,10 +34,11 @@ class UserViewModel @Inject constructor(
         viewModelScope.launch {
             setState { copy(fatching = true) }
             try {
-                val exist = repository.getUserCount() > 0;
+                val exist = repository.getUserCount() > 1;
                 setState { copy(exist = exist) }
             } catch (error: Exception) {
-                setState { copy(error = UserState.Error.PersonExist) }
+                println("Errorr: ${error.message}")
+                setState { copy(error = RegisterState.Error.LoadingFaild) }
             } finally {
                 setState {  copy(fatching = false) }
             }
@@ -49,7 +49,7 @@ class UserViewModel @Inject constructor(
         viewModelScope.launch {
             events.collect {
                 when (it) {
-                    is UserState.Events.Register -> {
+                    is RegisterState.Events.Register -> {
                         val fullName = it.fullName
                         val nickname = it.nickname
                         val email = it.email
@@ -59,13 +59,13 @@ class UserViewModel @Inject constructor(
                             "^[A-Za-z0-9_]{3,}@[A-Za-z0-9_]{3,}\\.[A-Za-z0-9_]{2,}$".toRegex()
 
                         if (fullName.isEmpty() || email.isEmpty() || nickname.isEmpty()) {
-                            setState { copy(error = UserState.Error.MissingParts) }
+                            setState { copy(error = RegisterState.Error.MissingParts) }
                         } else if (fullName.isNotEmpty() && !fullName.matches(fullNameRegex)) {
-                            setState { copy(error = UserState.Error.BadFullName) }
+                            setState { copy(error = RegisterState.Error.BadFullName) }
                         } else if (nickname.isNotEmpty() && !nickname.matches(nicknameRegex)) {
-                            setState { copy(error = UserState.Error.BadNickname) }
+                            setState { copy(error = RegisterState.Error.BadNickname) }
                         } else if (email.isNotEmpty() && !email.matches(emailRegex)) {
-                            setState { copy(error = UserState.Error.BadEmail) }
+                            setState { copy(error = RegisterState.Error.BadEmail) }
                         } else {
                             val user = User(
                                 id = 0,
@@ -74,7 +74,11 @@ class UserViewModel @Inject constructor(
                                 nickname = nickname,
                                 email = email
                             )
-                            repository.insertUser(user)
+                            try {
+                                repository.insertUser(user)
+                            } catch (error: Exception) {
+                                setState { copy(error = RegisterState.Error.PersonExist) }
+                            }
                             setState {copy(SuccesRegister = true)}
                         }
                     }

@@ -12,6 +12,7 @@ import com.example.mobilne2.catProfile.catProfileScreen
 import com.example.mobilne2.homePage.homeScreen
 import com.example.mobilne2.leaderBoardP.leaderBoard.leaderBScreen
 import com.example.mobilne2.quizScreen.quiz.quizScreen
+import com.example.mobilne2.userPage.editProfile.editProfile
 import com.example.mobilne2.userPage.myProfile.myProfileScreen
 import com.example.mobilne2.userPage.registration.registerScreen
 
@@ -27,12 +28,6 @@ fun ScreenManager() {
         startDestination = "registerScreen",
     ) {
 
-        registerScreen(
-            route = "registerScreen",
-            onItemClick = {
-                navController.navigate(route = "homeScreen")
-            },
-        )
         homeScreen(
             route = "homeScreen",
             navController = navController,
@@ -70,15 +65,6 @@ fun ScreenManager() {
                 navController.navigateUp()
             },
         )
-        myProfileScreen(
-            route = "myProfile",
-            onItemCLick = {
-                navController.navigate(route = "leaderBoard")
-            },
-            onClose = {
-                navController.navigateUp()
-            }
-        )
         quizScreen(
             route = "quiz",
             onClose = {
@@ -87,6 +73,27 @@ fun ScreenManager() {
         )
         leaderBScreen(
             route = "leaderBoard",
+            onClose = {
+                navController.navigateUp()
+            }
+        )
+        registerScreen(
+            route = "registerScreen",
+            onItemClick = {
+                navController.navigate(route = "homeScreen")
+            },
+        )
+        myProfileScreen(
+            route = "myProfile",
+            onItemCLick = {
+                navController.navigate(route = "editProfile")
+            },
+            onClose = {
+                navController.navigateUp()
+            }
+        )
+        editProfile(
+            route = "editProfile",
             onClose = {
                 navController.navigateUp()
             }

@@ -10,12 +10,12 @@ data class CatGalleryState (
     val dataPerPage : Int = 20,
     val album: List<CatImageUI> = emptyList(),
     val catsPerPage: List<CatImageUI> = emptyList(),
-    val error: DetailsError? = null,
+    val error: Error? = null,
 ) {
     sealed class Events {
         data class changePage(val changePage: Int) : Events()
     }
-    sealed class DetailsError {
-        data class DataUpdateFailed(val cause: Throwable? = null) : DetailsError()
+    sealed class Error {
+        data object LoadError : Error()
     }
 }

@@ -73,7 +73,7 @@ class CatGalleryViewModel @Inject constructor(
                 setState { copy(catsPerPage = catsPerPage)}
 
             } catch (error: Exception) {
-                setState { copy(error = CatGalleryState.DetailsError.DataUpdateFailed(cause = error)) }
+                setState { copy(error = CatGalleryState.Error.LoadError) }
             } finally {
                 setState {
                     copy(fetching = false)

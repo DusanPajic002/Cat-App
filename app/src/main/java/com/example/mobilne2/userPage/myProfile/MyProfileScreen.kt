@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -92,7 +93,7 @@ fun MyProfileScreen(
                         }
                     }
                 }
-            } else {
+            } else if (!data.loading) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -101,44 +102,61 @@ fun MyProfileScreen(
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.Start
                 ) {
-                    // User Information Card
                     Card(
-                        modifier = Modifier.fillMaxWidth().padding(8.dp),
-
+                        modifier = Modifier
+                            .fillMaxWidth(),
                     ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp),
-                            verticalArrangement = Arrangement.Top,
-                            horizontalAlignment = Alignment.Start
+                        Box(
+                            modifier = Modifier
+                                .padding(14.dp)
+                                .fillMaxWidth()
                         ) {
-                            Text(
-                                text = "Name: ${data.user?.firstName ?: "N/A"}",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black,
-                                modifier = Modifier.padding(bottom = 4.dp)
-                            )
-                            Text(
-                                text = "Surname: ${data.user?.lastName ?: "N/A"}",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black,
-                                modifier = Modifier.padding(bottom = 4.dp)
-                            )
-                            Text(
-                                text = "Nickname: ${data.user?.nickname ?: "N/A"}",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black,
-                                modifier = Modifier.padding(bottom = 4.dp)
-                            )
-                            Text(
-                                text = "Email: ${data.user?.email ?: "N/A"}",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black,
-                                modifier = Modifier.padding(bottom = 4.dp)
-                            )
+                            Column(
+                                modifier = Modifier
+                                    .align(Alignment.TopStart)
+                                    .padding(end = 48.dp),
+                                verticalArrangement = Arrangement.Top,
+                                horizontalAlignment = Alignment.Start
+                            ) {
+                                Text(
+                                    text = "Name: ${data.user?.firstName ?: "N/A"}",
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black,
+                                    modifier = Modifier.padding(bottom = 4.dp)
+                                )
+                                Text(
+                                    text = "Surname: ${data.user?.lastName ?: "N/A"}",
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black,
+                                    modifier = Modifier.padding(bottom = 4.dp)
+                                )
+                                Text(
+                                    text = "Nickname: ${data.user?.nickname ?: "N/A"}",
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black,
+                                    modifier = Modifier.padding(bottom = 4.dp)
+                                )
+                                Text(
+                                    text = "E-mail: ${data.user?.email ?: "N/A"}",
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black,
+                                    modifier = Modifier.padding(bottom = 4.dp)
+                                )
+                            }
+                            IconButton(
+                                onClick = onItemCLick,
+                                modifier = Modifier.align(Alignment.TopEnd)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Edit,
+                                    contentDescription = "Edit",
+                                    tint = Color.Black
+                                )
+                            }
                         }
                     }
                     Spacer(modifier = Modifier.height(6.dp))
@@ -147,7 +165,8 @@ fun MyProfileScreen(
                         eventPublisher = eventPublisher
                     )
                 }
-
+            }else{
+                LoadingMyProfile()
             }
         }
     )
@@ -252,5 +271,23 @@ private fun LeaderBoardList(
             }
         }
 
+    }
+}
+
+
+@Composable
+fun LoadingMyProfile() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = "Loading profile...", fontSize = 24.sp)
+            Spacer(modifier = Modifier.height(16.dp))
+            CircularProgressIndicator()
+        }
     }
 }

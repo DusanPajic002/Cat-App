@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "d94799810042ab8a63c880c4527f5274",
+    "identityHash": "f2b20326aea82f640e0e6121edb9a378",
     "entities": [
       {
         "tableName": "Cat",
@@ -325,7 +325,26 @@
             "id"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_users_nickname",
+            "unique": true,
+            "columnNames": [
+              "nickname"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_users_nickname` ON `${TABLE_NAME}` (`nickname`)"
+          },
+          {
+            "name": "index_users_email",
+            "unique": true,
+            "columnNames": [
+              "email"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_users_email` ON `${TABLE_NAME}` (`email`)"
+          }
+        ],
         "foreignKeys": []
       },
       {
@@ -382,7 +401,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd94799810042ab8a63c880c4527f5274')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f2b20326aea82f640e0e6121edb9a378')"
     ]
   }
 }

@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import org.xml.sax.ErrorHandler
 
 fun NavGraphBuilder.registerScreen(
     route: String,
@@ -26,7 +27,7 @@ fun NavGraphBuilder.registerScreen(
     route = route,
 ) { navBackStackEntry ->
 
-    val userViewModel: UserViewModel = hiltViewModel(navBackStackEntry)
+    val userViewModel: RegisterViewModel = hiltViewModel(navBackStackEntry)
     val state = userViewModel.state.collectAsState()
 
     RegisterScreen(
@@ -40,9 +41,9 @@ fun NavGraphBuilder.registerScreen(
 
 @Composable
 fun RegisterScreen(
-    data: UserState,
+    data: RegisterState,
     onItemClick: () -> Unit,
-    eventPublisher: (UserState.Events) -> Unit,
+    eventPublisher: (RegisterState.Events) -> Unit,
 ) {
     if (data.SuccesRegister || data.exist) {
         onItemClick()
@@ -54,7 +55,23 @@ fun RegisterScreen(
             .fillMaxSize()
             .clickable { focusManager.clearFocus() },
         content = { paddingValues ->
-            if (!data.fatching) {
+            if(data.error != null && data.error is RegisterState.Error.PersonExist) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "User already exist",
+                        color = Color.Red,
+                        fontSize = 24.sp
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = { onItemClick() }) {
+                        Text("Go to home")
+                    }
+                }
+            } else if (!data.fatching) {
                 var fullName by remember { mutableStateOf("") }
                 var nickname by remember { mutableStateOf("") }
                 var email by remember { mutableStateOf("") }
@@ -66,25 +83,7 @@ fun RegisterScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if(data.error != null && data.error is UserState.Error.PersonExist) {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = "User already exist",
-                                color = Color.Red,
-                                fontSize = 24.sp
-                            )
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Button(onClick = { onItemClick() }) {
-                                Text("Go to home")
-                            }
-                        }
-                        return@Scaffold
-                    }
-                    if (data.error != null && data.error is UserState.Error.MissingParts) {
+                    if (data.error != null && data.error is RegisterState.Error.MissingParts) {
                         Row(
                             modifier = Modifier.fillMaxWidth(0.8f),
                             verticalAlignment = Alignment.CenterVertically,
@@ -103,11 +102,11 @@ fun RegisterScreen(
                         onValueChange = { fullName = it },
                         label = { Text("Full name") },
                         singleLine = true,
-                        isError = data.error != null && data.error is UserState.Error.BadFullName,
+                        isError = data.error != null && data.error is RegisterState.Error.BadFullName,
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-                    if (data.error != null && data.error is UserState.Error.BadFullName) {
+                    if (data.error != null && data.error is RegisterState.Error.BadFullName) {
                         Row(
                             modifier = Modifier.fillMaxWidth(0.8f),
                             verticalAlignment = Alignment.CenterVertically,
@@ -126,11 +125,11 @@ fun RegisterScreen(
                         onValueChange = { nickname = it },
                         label = { Text("Nickname") },
                         singleLine = true,
-                        isError = data.error != null && data.error is UserState.Error.BadNickname,
+                        isError = data.error != null && data.error is RegisterState.Error.BadNickname,
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-                    if (data.error != null && data.error is UserState.Error.BadNickname) {
+                    if (data.error != null && data.error is RegisterState.Error.BadNickname) {
                         Row(
                             modifier = Modifier.fillMaxWidth(0.8f),
                             verticalAlignment = Alignment.CenterVertically,
@@ -149,11 +148,11 @@ fun RegisterScreen(
                         onValueChange = { email = it },
                         label = { Text("Email") },
                         singleLine = true,
-                        isError = data.error != null && data.error is UserState.Error.BadEmail,
+                        isError = data.error != null && data.error is RegisterState.Error.BadEmail,
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-                    if (data.error != null && data.error is UserState.Error.BadEmail) {
+                    if (data.error != null && data.error is RegisterState.Error.BadEmail) {
                         Row(
                             modifier = Modifier.fillMaxWidth(0.8f),
                             verticalAlignment = Alignment.CenterVertically,
@@ -167,45 +166,43 @@ fun RegisterScreen(
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                     }
-                    buttonFun(
-                        eventPublisher = eventPublisher,
-                        fullName = fullName,
-                        nickname = nickname,
-                        email = email
-
-                    )
+                    Button(
+                        onClick = {
+                            eventPublisher(RegisterState.Events.Register(fullName, nickname, email))
+                        }
+                    ) {
+                        Text("Register")
+                    }
 
                 }
             } else {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(text = "Loading...", fontSize = 24.sp)
-                        Spacer(modifier = Modifier.height(16.dp))
-                        CircularProgressIndicator()
-                    }
-                }
+                LoadingEditProfile()
             }
         }
     )
 }
+
 @Composable
-fun buttonFun(
-    eventPublisher: (UserState.Events) -> Unit,
-    fullName: String,
-    nickname: String,
-    email: String,
-) {
-    Button(
-        onClick = {
-            eventPublisher(UserState.Events.Register(fullName, nickname, email))
-        }
+fun ErrorHandler(){
+
+}
+
+
+
+@Composable
+fun LoadingEditProfile() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Text("Register")
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = "Loading...", fontSize = 24.sp)
+            Spacer(modifier = Modifier.height(16.dp))
+            CircularProgressIndicator()
+        }
     }
 }
+

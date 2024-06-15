@@ -164,19 +164,7 @@ fun LeaderBScreen(
                         }
                     }
                 } else {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Text(text = "Loading LeaderBoard...", fontSize = 24.sp)
-                            Spacer(modifier = Modifier.height(16.dp))
-                            CircularProgressIndicator()
-                        }
-                    }
+                    LoadingLeaderBoard()
                 }
             }
         )
@@ -213,6 +201,23 @@ private fun pageChanger(
             enabled = data.page < data.maxPage
         ) {
             Text("--->", fontSize = 20.sp)
+        }
+    }
+}
+
+@Composable
+fun LoadingLeaderBoard() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = "Loading LeaderBoard...", fontSize = 24.sp)
+            Spacer(modifier = Modifier.height(16.dp))
+            CircularProgressIndicator()
         }
     }
 }

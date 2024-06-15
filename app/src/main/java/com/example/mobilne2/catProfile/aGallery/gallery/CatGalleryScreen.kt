@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -30,11 +32,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.example.mobilne2.catProfile.aGallery.aPhoto.CatPhotoState
 import com.example.mobilne2.catProfile.profile.model.CatImageUI
 import com.example.mobilne2.core.compose.PhotoPreview
 import com.example.mobilne2.leaderBoardP.leaderBoard.LeaderBState
@@ -100,16 +105,27 @@ fun CatGalleryScreen(
                 Column(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    if (data.album.isEmpty() && data.fetching) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(36.dp),
-                            )
+                    if (data.error != null) {
+                        if(data.error is CatGalleryState.Error.LoadError) {
+                            Row(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Text(
+                                    text = "The gallery is not working",
+                                    fontSize = 24.sp,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.padding(16.dp),
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                                Button(
+                                    onClick = { onClose }
+                                ) {
+                                    Text("Go back")
+                                }
+                            }
                         }
-                    } else {
+                    } else if (!data.fetching){
                         pageChanger(data, eventPublisher)
                         LazyVerticalGrid(
                             modifier = Modifier
@@ -136,6 +152,8 @@ fun CatGalleryScreen(
                                 }
                             }
                         }
+                    }else{
+                        LoadingGallery()
                     }
                 }
             }
@@ -175,6 +193,24 @@ private fun pageChanger(
             enabled = data.page < data.maxPage
         ) {
             Text("--->", fontSize = 20.sp)
+        }
+    }
+}
+
+
+@Composable
+fun LoadingGallery() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = "Loading gallery...", fontSize = 24.sp)
+            Spacer(modifier = Modifier.height(16.dp))
+            CircularProgressIndicator()
         }
     }
 }

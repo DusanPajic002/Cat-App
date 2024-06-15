@@ -2,7 +2,7 @@ package com.example.mobilne2.userPage.mapper
 
 
 import com.example.mobilne2.userPage.db.User
-import com.example.mobilne2.userPage.registration.model.UserUI
+import com.example.mobilne2.userPage.modelUI.UserUI
 
 fun User.asUserUI(): UserUI {
     return UserUI(

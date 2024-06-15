@@ -125,12 +125,12 @@ fun QuizScreen(
                     ) {
                         Text(text = "Cancle", fontSize = 16.sp)
                     }
-                } else if (data.finished){
+                } else if (data.finished && !data.cancled && !data.loading) {
                     eventPublisher(QuizState.Events.updateScore)
                     QuizResult(score = data.score, eventPublisher, onClose = onClose)
-                } else if (data.cancled){
+                } else if (data.cancled && !data.finished && !data.loading){
                     QuizCancled(onClose = onClose)
-                } else if (data.loading){
+                } else if (data.loading && !data.finished && !data.cancled){
                     QuizLoading()
                 }
 
@@ -153,7 +153,6 @@ fun QuizLoading() {
             Spacer(modifier = Modifier.height(16.dp))
             CircularProgressIndicator()
         }
-
     }
 }
 

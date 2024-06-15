@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -59,7 +60,7 @@ fun NavGraphBuilder.catListScreen(
     val state by catListViewModel.state.collectAsState()
 
     CatList(
-        state = state,
+        data = state,
         eventPublisher = {
             catListViewModel.setEvent(it)
         },
@@ -71,7 +72,7 @@ fun NavGraphBuilder.catListScreen(
 @ExperimentalMaterial3Api
 @Composable
 fun CatList(
-    state: CatListState,
+    data: CatListState,
     eventPublisher: (CatListState.FilterEvent) -> Unit,
     onItemClick: (String) -> Unit,
     onClose: () -> Unit,
@@ -97,44 +98,32 @@ fun CatList(
             }
         },
         content = {
-            CatsList(
-                paddingValues = it,
-                data = state.filteredCats,
-                textfilt = state.filter,
-                eventPublisher = eventPublisher,
-                onItemClick = {
-                    onItemClick(it)
-                },
-            )
 
-            if (state.cats.isEmpty()) {
-                when (state.fetching) {
-                    true -> {
+            when (data.fetching) {
+                true -> LoadingCatList()
+
+                false -> {
+                    if (data.error != null) {
                         Box(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center,
                         ) {
-                            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                        }
-                    }
-
-                    false -> {
-                        if (state.error != null) {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                val errorMessage = when (state.error) {
-                                    is CatListState.ListError.ListUpdateFailed ->
-                                        "Failed to load. Error message: ${state.error.cause?.message}."
-
-                                    else -> {
-                                        "An error occurred."
-                                    }
-                                }
-                                Text(text = errorMessage)
+                            val errorMessage = when (data.error) {
+                                is CatListState.ListError.ListUpdateFailed ->
+                                    "Failed to load. Error message: ${data.error.cause?.message}."
                             }
+                            Text(text = errorMessage)
                         }
+                    } else {
+                        CatsList(
+                            paddingValues = it,
+                            data = data.filteredCats,
+                            textfilt = data.filter,
+                            eventPublisher = eventPublisher,
+                            onItemClick = {
+                                onItemClick(it)
+                            },
+                        )
                     }
                 }
             }
@@ -280,5 +269,23 @@ fun SuggestionChipExample(personalityTraits: List<String>) {
             onClick = {},
             label = { Text(trait) },
         )
+    }
+}
+
+
+@Composable
+fun LoadingCatList() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = "Loading gallery...", fontSize = 24.sp)
+            Spacer(modifier = Modifier.height(16.dp))
+            CircularProgressIndicator()
+        }
     }
 }

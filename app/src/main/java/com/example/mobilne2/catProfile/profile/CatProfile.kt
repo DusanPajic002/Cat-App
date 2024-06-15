@@ -3,10 +3,13 @@ package com.example.mobilne2.catProfile
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -56,7 +59,7 @@ fun NavGraphBuilder.catProfileScreen(
     val state = catProfileViewModel.state.collectAsState()
 
     CatProfile(
-        state = state.value,
+        data = state.value,
         onItemClick = onItemClick,
         onClose = onClose,
     )
@@ -65,7 +68,7 @@ fun NavGraphBuilder.catProfileScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CatProfile(
-    state: CatProfileState,
+    data: CatProfileState,
     onClose: () -> Unit,
     onItemClick: (String) -> Unit,
 ){
@@ -94,30 +97,25 @@ fun CatProfile(
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                if (state.fetching) {
+                if(data.error != null){
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center,
                     ) {
-                        CircularProgressIndicator()
-                    }
-                } else if (state.error != null) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        val errorMessage = when (state.error) {
+                        val errorMessage = when (data.error) {
                             is CatProfileState.DetailsError.DataUpdateFailed ->
-                                "Failed to load. Error message: ${state.error.cause?.message}."
+                                "Failed to load. Error message: ${data.error.cause?.message}."
                         }
                         Text(text = errorMessage)
                     }
-                } else if (state.cat != null) {
+                }else if (!data.fetching && data.cat != null) {
                     CatData(
-                        cat = state.cat,
+                        cat = data.cat,
                         onItemClick = onItemClick,
-                        imageUrl = (state.image?.url ?: "")
+                        imageUrl = (data.image?.url ?: "")
                     )
+                }else if (data.fetching){
+                    LoadingCatProfile()
                 }
             }
 
@@ -225,3 +223,22 @@ private fun CatData(
 
     }
 }
+
+
+@Composable
+fun LoadingCatProfile() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = "Loading cat profile...", fontSize = 24.sp)
+            Spacer(modifier = Modifier.height(16.dp))
+            CircularProgressIndicator()
+        }
+    }
+}
+
