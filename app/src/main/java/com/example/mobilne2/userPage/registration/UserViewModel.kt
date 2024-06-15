@@ -35,7 +35,7 @@ class UserViewModel @Inject constructor(
         viewModelScope.launch {
             setState { copy(fatching = true) }
             try {
-                val exist = repository.getUserCount() > 2;
+                val exist = repository.getUserCount() > 0;
                 setState { copy(exist = exist) }
             } catch (error: Exception) {
                 setState { copy(error = UserState.Error.PersonExist) }

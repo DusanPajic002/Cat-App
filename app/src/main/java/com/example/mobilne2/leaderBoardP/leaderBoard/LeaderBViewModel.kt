@@ -50,7 +50,6 @@ class LeaderBViewModel @Inject constructor(
             }
         }
     }
-    //val leaderBoardPrivate = repository.getLeaderBoard().map { it.asLeaderBoardUI() }.sortedBy { it.createdAt }
 
     private fun loadLeaderBoard() {
         viewModelScope.launch {
@@ -58,14 +57,17 @@ class LeaderBViewModel @Inject constructor(
             try {
 
                 val leaderBoardOnline = repository.getLeaderBoardOnline(1).map { it.asLeaderBoardUI() }
-                setState { copy(maxPage = leaderBoardOnline.size/state.value.dataPerPage + (leaderBoardOnline.size/state.value.dataPerPage)%2 ) }
                 setState { copy(leaderBoardOnline = leaderBoardOnline ) }
+
+                val nPage1 = leaderBoardOnline.size/state.value.dataPerPage
+                val nPage2 = if ((leaderBoardOnline.size % state.value.dataPerPage) != 0) 1 else 0
+                setState { copy(maxPage = ( nPage1 + nPage2 )) }
 
                 val leaderBoardOnlinePerPage = state.value.leaderBoardOnline.subList(0, state.value.dataPerPage)
                 setState { copy(leaderBoardOnlinePerPage = leaderBoardOnlinePerPage)}
 
             } catch (error: Exception) {
-                //setState { copy(error = LeaderBState.LeaderBError.DataUpdateFailed(cause = error)) }
+                //setState { copy(error =
             } finally {
                 setState {
                     copy(fetching = false)

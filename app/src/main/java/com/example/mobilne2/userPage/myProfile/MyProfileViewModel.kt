@@ -50,7 +50,9 @@ class MyProfileViewModel @Inject constructor(
                 val leaderBoard = (publicLB + privateLB).sortedByDescending { it.createdAt }
                 setState { copy(leaderBoard = leaderBoard) }
 
-                setState { copy(maxPage = leaderBoard.size/state.value.dataPerPage + (leaderBoard.size/state.value.dataPerPage)%2 ) }
+                val nPage1 = leaderBoard.size/state.value.dataPerPage
+                val nPage2 = if ((leaderBoard.size % state.value.dataPerPage) != 0) 1 else 0
+                setState { copy(maxPage = ( nPage1 + nPage2 )) }
 
                 val usersPerPage = state.value.leaderBoard.subList(0, state.value.dataPerPage)
                 setState { copy(usersPerPage = usersPerPage)}

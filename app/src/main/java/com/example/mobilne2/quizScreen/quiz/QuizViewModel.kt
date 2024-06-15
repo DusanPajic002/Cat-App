@@ -16,7 +16,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneOffset
+import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -73,12 +77,11 @@ class QuizViewModel @Inject constructor(
                             )
                             repository.pusblishOnline(leaderBoardData)
                         }else{
-                            val time = LocalTime.now().toSecondOfDay()
                             val leaderBoardData = LeaderBoard(
                                 userID = state.value.userID,
                                 nickname = state.value.userNickname,
                                 result = state.value.score,
-                                createdAt = time.toLong(),
+                                createdAt = System.currentTimeMillis(),
                             )
                             repository.pusblishPrivate(leaderBoardData)
                         }

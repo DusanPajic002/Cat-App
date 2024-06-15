@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.mobilne2.catListP.list.catListScreen
 import com.example.mobilne2.catProfile.aGallery.aPhoto.catPhotoScreen
-import com.example.mobilne2.catProfile.aGallery.gallery.catGaleryScreen
+import com.example.mobilne2.catProfile.aGallery.gallery.catGalleryScreen
 import com.example.mobilne2.catProfile.catProfileScreen
 import com.example.mobilne2.homePage.homeScreen
 import com.example.mobilne2.leaderBoardP.leaderBoard.leaderBScreen
@@ -49,14 +49,14 @@ fun ScreenManager() {
         catProfileScreen(
             route = "cat/{catId}",
             onItemClick = {
-                navController.navigate(route = "catGalery/${it}")
+                navController.navigate(route = "catGallery/${it}")
             },
             onClose = {
                 navController.navigateUp()
             },
         )
-        catGaleryScreen(
-            route = "catGalery/{catProfileId}",
+        catGalleryScreen(
+            route = "catGallery/{catProfileId}",
             onItemClick = {
                 navController.navigate(route = "photo/${it}")
             },

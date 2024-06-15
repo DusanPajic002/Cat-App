@@ -214,8 +214,8 @@ private fun LeaderBoardList(
                     )
                     Spacer(modifier = Modifier.height(14.dp))
                 }
-                items(items.size) { index ->
-                    val player = items[index]
+                items(items.size) { i ->
+                    val player = items[i]
                     val date = Date(player.createdAt)
                     val format =
                         SimpleDateFormat("dd.MM.yyyy. | HH:mm", Locale.getDefault())
@@ -230,8 +230,7 @@ private fun LeaderBoardList(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column {
-                            val rank =
-                                index + 1 + (data.page - 1) * data.dataPerPage
+                            val rank = i + 1 + (data.page - 1) * data.dataPerPage
                             Text(
                                 text = "${rank}. ${player.nickname}",
                                 fontWeight = FontWeight.Bold,
