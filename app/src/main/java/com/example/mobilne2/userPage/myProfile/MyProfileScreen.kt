@@ -93,7 +93,7 @@ fun MyProfileScreen(
                         }
                     }
                 }
-            } else if (!data.loading) {
+            } else if (!data.loading && data.user != null) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -118,34 +118,17 @@ fun MyProfileScreen(
                                 verticalArrangement = Arrangement.Top,
                                 horizontalAlignment = Alignment.Start
                             ) {
-                                Text(
-                                    text = "Name: ${data.user?.firstName ?: "N/A"}",
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.Black,
-                                    modifier = Modifier.padding(bottom = 4.dp)
-                                )
-                                Text(
-                                    text = "Surname: ${data.user?.lastName ?: "N/A"}",
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.Black,
-                                    modifier = Modifier.padding(bottom = 4.dp)
-                                )
-                                Text(
-                                    text = "Nickname: ${data.user?.nickname ?: "N/A"}",
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.Black,
-                                    modifier = Modifier.padding(bottom = 4.dp)
-                                )
-                                Text(
-                                    text = "E-mail: ${data.user?.email ?: "N/A"}",
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.Black,
-                                    modifier = Modifier.padding(bottom = 4.dp)
-                                )
+
+                                val name = data.user.firstName
+                                val surname = data.user.lastName
+                                val nickname = data.user.nickname
+                                val email = data.user.email
+
+                                userInfoRow(text = "Name: $name")
+                                userInfoRow(text = "Surname: $surname")
+                                userInfoRow(text = "Nickname: $nickname")
+                                userInfoRow(text = "E-mail: $email")
+
                             }
                             IconButton(
                                 onClick = onItemCLick,
@@ -169,6 +152,19 @@ fun MyProfileScreen(
                 LoadingMyProfile()
             }
         }
+    )
+}
+
+@Composable
+private fun userInfoRow(
+    text: String
+){
+    Text(
+        text = text,
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold,
+        color = Color.Black,
+        modifier = Modifier.padding(bottom = 4.dp)
     )
 }
 

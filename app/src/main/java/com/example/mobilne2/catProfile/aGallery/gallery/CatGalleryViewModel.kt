@@ -62,6 +62,7 @@ class CatGalleryViewModel @Inject constructor(
             try {
 
                 withContext(Dispatchers.IO) { repository.fetchImages(catId) }
+
                 val album = withContext(Dispatchers.IO) { repository.getAllImagesCatID(catId) }
                 setState { copy(album = album.map { it.asCatImageUiModel() }) }
 
@@ -73,16 +74,12 @@ class CatGalleryViewModel @Inject constructor(
                 setState { copy(catsPerPage = catsPerPage)}
 
             } catch (error: Exception) {
-                setState { copy(error = CatGalleryState.Error.LoadError) }
+                setState { copy(error = CatGalleryState.Error.LoadError()) }
             } finally {
-                setState {
-                    copy(fetching = false)
-                }
+                setState {copy(fetching = false)}
             }
         }
     }
-
-
 
 
 

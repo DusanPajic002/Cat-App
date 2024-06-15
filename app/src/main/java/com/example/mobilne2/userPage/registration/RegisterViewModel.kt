@@ -34,7 +34,7 @@ class RegisterViewModel @Inject constructor(
         viewModelScope.launch {
             setState { copy(fatching = true) }
             try {
-                val exist = repository.getUserCount() > 1;
+                val exist = repository.getUserCount() > 3;
                 setState { copy(exist = exist) }
             } catch (error: Exception) {
                 println("Errorr: ${error.message}")

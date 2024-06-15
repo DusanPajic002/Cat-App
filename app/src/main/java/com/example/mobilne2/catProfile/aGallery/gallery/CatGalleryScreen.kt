@@ -105,26 +105,25 @@ fun CatGalleryScreen(
                 Column(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    if (data.error != null) {
-                        if(data.error is CatGalleryState.Error.LoadError) {
-                            Row(
+                    if (data.error != null && data.error is CatGalleryState.Error.LoadError) {
+                            Column(
                                 modifier = Modifier.fillMaxSize(),
-                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
                             ) {
                                 Text(
-                                    text = "The gallery is not working",
+                                    text = data.error.message,
                                     fontSize = 24.sp,
                                     textAlign = TextAlign.Center,
                                     modifier = Modifier.padding(16.dp),
                                     overflow = TextOverflow.Ellipsis,
                                 )
                                 Button(
-                                    onClick = { onClose }
+                                    onClick = { onClose() }
                                 ) {
                                     Text("Go back")
                                 }
                             }
-                        }
                     } else if (!data.fetching){
                         pageChanger(data, eventPublisher)
                         LazyVerticalGrid(
@@ -196,7 +195,6 @@ private fun pageChanger(
         }
     }
 }
-
 
 @Composable
 fun LoadingGallery() {

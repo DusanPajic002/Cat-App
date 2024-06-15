@@ -18,7 +18,7 @@ import com.example.mobilne2.userPage.db.UserDao
         User::class,
         LeaderBoard::class,
     ],
-    version = 5,
+    version = 6,
     exportSchema = true,
 )
 abstract class AppDatabase : RoomDatabase() {

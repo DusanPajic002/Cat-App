@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import org.xml.sax.ErrorHandler
 
 fun NavGraphBuilder.registerScreen(
     route: String,
@@ -47,7 +46,7 @@ fun RegisterScreen(
 ) {
     if (data.SuccesRegister || data.exist) {
         onItemClick()
-        return;
+        return
     }
     val focusManager = LocalFocusManager.current
     Scaffold(
@@ -56,12 +55,14 @@ fun RegisterScreen(
             .clickable { focusManager.clearFocus() },
         content = { paddingValues ->
 
-            if(data.error != null && data.error is RegisterState.Error.LoadingFailed)
+            if(data.error != null && data.error is RegisterState.Error.LoadingFailed) {
                 ErrorHandler(data.error.message)
-            else if (!data.fatching) {
+            } else if (!data.fatching) {
+
                 var fullName by remember { mutableStateOf("") }
                 var nickname by remember { mutableStateOf("") }
                 var email by remember { mutableStateOf("") }
+
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -74,42 +75,30 @@ fun RegisterScreen(
                         ErrorHandler(data.error.message)
                     if (data.error != null && data.error is RegisterState.Error.MissingParts)
                         ErrorHandler(data.error.message)
-                    OutlinedTextField(
+
+                    registrationInput(
                         value = fullName,
                         onValueChange = { fullName = it },
-                        label = { Text("Full name") },
-                        singleLine = true,
+                        label = "Full name",
                         isError = data.error != null && data.error is RegisterState.Error.BadFullName,
-                        modifier = Modifier.fillMaxWidth()
+                        error = if (data.error is RegisterState.Error.BadFullName) data.error.message else "skip"
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    if (data.error != null && data.error is RegisterState.Error.BadFullName)
-                        ErrorHandler(data.error.message)
-
-                    OutlinedTextField(
+                    registrationInput(
                         value = nickname,
                         onValueChange = { nickname = it },
-                        label = { Text("Nickname") },
-                        singleLine = true,
+                        label = "Nickname",
                         isError = data.error != null &&
                                 (data.error is RegisterState.Error.BadNickname || data.error is RegisterState.Error.PersonExist),
-                        modifier = Modifier.fillMaxWidth()
+                        error = if (data.error is RegisterState.Error.BadNickname) data.error.message else "skip"
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    if (data.error != null && data.error is RegisterState.Error.BadNickname)
-                        ErrorHandler(data.error.message)
-
-                    OutlinedTextField(
+                    registrationInput(
                         value = email,
                         onValueChange = { email = it },
-                        label = { Text("Email") },
-                        singleLine = true,
+                        label = "Email",
                         isError = data.error != null && data.error is RegisterState.Error.BadEmail,
-                        modifier = Modifier.fillMaxWidth()
+                        error = if (data.error is RegisterState.Error.BadEmail) data.error.message else "skip"
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    if (data.error != null && data.error is RegisterState.Error.BadEmail)
-                        ErrorHandler(data.error.message)
+
                     Button(
                         onClick = {
                             eventPublisher(RegisterState.Events.Register(fullName, nickname, email))
@@ -117,7 +106,6 @@ fun RegisterScreen(
                     ) {
                         Text("Register")
                     }
-
                 }
             } else {
                 LoadingEditProfile()
@@ -127,18 +115,53 @@ fun RegisterScreen(
 }
 
 @Composable
+fun registrationInput(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    isError: Boolean,
+    error: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            label = { Text(label) },
+            singleLine = true,
+            isError = isError,
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color(0xFFEAEAEA),
+                focusedContainerColor = Color(0xFFEAEAEA),
+                focusedIndicatorColor = Color.Gray,
+                unfocusedPlaceholderColor = Color.Gray,
+                focusedPlaceholderColor = Color.Gray,
+                cursorColor = Color.Black,
+            ),
+        )
+        if (error != "skip") {
+            ErrorHandler(message = error )
+        }
+    }
+}
+
+
+@Composable
 fun ErrorHandler(
     message: String
 ){
-    Row(
+    Column(
         modifier = Modifier.fillMaxWidth(0.8f),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = message,
             color = Color.Red,
-            fontSize = 16.sp
+            fontSize = 16.sp,
         )
     }
     Spacer(modifier = Modifier.height(16.dp))

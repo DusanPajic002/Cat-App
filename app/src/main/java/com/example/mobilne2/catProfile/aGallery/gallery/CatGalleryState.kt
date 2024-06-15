@@ -7,7 +7,7 @@ data class CatGalleryState (
     val fetching: Boolean = false,
     val page : Int = 1,
     val maxPage : Int = 1,
-    val dataPerPage : Int = 20,
+    val dataPerPage : Int = 10,
     val album: List<CatImageUI> = emptyList(),
     val catsPerPage: List<CatImageUI> = emptyList(),
     val error: Error? = null,
@@ -15,7 +15,7 @@ data class CatGalleryState (
     sealed class Events {
         data class changePage(val changePage: Int) : Events()
     }
-    sealed class Error {
-        data object LoadError : Error()
+    sealed class Error (val message: String) {
+        class LoadError : Error("The gallery is not working")
     }
 }

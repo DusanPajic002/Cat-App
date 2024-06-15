@@ -2,6 +2,7 @@ package com.example.mobilne2.userPage.editProfile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mobilne2.userPage.mapper.asUserUI
 import com.example.mobilne2.userPage.repository.UserRepostiory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -26,18 +27,24 @@ class EditProfileViewModel @Inject constructor(
 
     init {
         observeEvents()
-        loadMyProfile()
+        loadEditProfile()
     }
 
-    private fun loadMyProfile() {
+    private fun loadEditProfile() {
         viewModelScope.launch {
-            setState { copy(fatching = true) }
+            setState { copy(loading = true) }
             try {
+                val user = repository.getUserByID(1).asUserUI()
+                setState { copy(user = user) }
+                setState { copy(firstName = user.firstName) }
+                setState { copy(lastName = user.lastName) }
+                setState { copy(nickname = user.nickname) }
+                setState { copy(email = user.email) }
 
             } catch (error: Exception) {
                 setState { copy(error = EditProfileState.Error.LoadingFailed()) }
             } finally {
-                setState {  copy(fatching = false) }
+                setState { copy(loading = false) }
             }
         }
     }
@@ -46,27 +53,32 @@ class EditProfileViewModel @Inject constructor(
         viewModelScope.launch {
             events.collect {
                 when (it) {
+                    is EditProfileState.Events.Reset -> {
+                        setState { copy(reset = it.reset) }
+                    }
                     is EditProfileState.Events.EditFirstName -> {
                         val firstName = it.firstName
-                        val firstNameRegex = "^[A-Z][a-z]{3,}$".toRegex()
+                        val firstNameRegex = "^[A-Z][a-z]{2,}$".toRegex()
                         if (firstName.isEmpty() || !firstNameRegex.matches(firstName)) {
                             setState { copy(error = EditProfileState.Error.BadFirstName()) }
-                        }else{
+                        } else {
                             val userID = state.value.user?.id
                             if (userID != null) {
                                 repository.updateFirstName(userID, firstName)
+                                setState { copy(firstName = firstName) }
                             }
                         }
                     }
                     is EditProfileState.Events.EditLastName -> {
                         val lastName = it.lastName
-                        val lastNameRegex = "^[A-Z][a-z]{3,}$".toRegex()
+                        val lastNameRegex = "^[A-Z][a-z]{2,}$".toRegex()
                         if (lastName.isEmpty() || !lastNameRegex.matches(lastName)) {
                             setState { copy(error = EditProfileState.Error.BadLastName()) }
-                        }else{
+                        } else {
                             val userID = state.value.user?.id
                             if (userID != null) {
                                 repository.updateLastName(userID, lastName)
+                                setState { copy(lastName = lastName) }
                             }
                         }
                     }
@@ -75,11 +87,12 @@ class EditProfileViewModel @Inject constructor(
                         val nicknameRegex = "^[A-Za-z0-9_]{3,}$".toRegex()
                         if (nickname.isEmpty() || !nicknameRegex.matches(nickname)) {
                             setState { copy(error = EditProfileState.Error.BadNickname()) }
-                        }else{
+                        } else {
                             val userID = state.value.user?.id
                             if (userID != null) {
                                 try {
                                     repository.updateNickname(userID, nickname)
+                                    setState { copy(nickname = nickname) }
                                 } catch (e: Exception) {
                                     setState { copy(error = EditProfileState.Error.PersonExist()) }
                                 }
@@ -88,20 +101,24 @@ class EditProfileViewModel @Inject constructor(
                     }
                     is EditProfileState.Events.EditEmail -> {
                         val email = it.email
-                        val emailRegex ="^[A-Za-z0-9_]{3,}@[A-Za-z0-9_]{3,}\\.[A-Za-z0-9_]{2,}$".toRegex()
+                        val emailRegex =
+                            "^[A-Za-z0-9_]{3,}@[A-Za-z0-9_]{3,}\\.[A-Za-z0-9_]{2,}$".toRegex()
                         if (email.isEmpty() || !emailRegex.matches(email)) {
                             setState { copy(error = EditProfileState.Error.BadEmail()) }
-                        }else {
+                        } else {
                             val userID = state.value.user?.id
                             if (userID != null) {
                                 repository.updateEmail(userID, email)
+                                setState {
+                                    copy(email = email)
+                                }
                             }
                         }
-                    }
 
+                    }
                 }
             }
         }
-    }
 
+    }
 }

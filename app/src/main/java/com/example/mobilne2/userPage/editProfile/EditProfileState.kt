@@ -3,8 +3,10 @@ package com.example.mobilne2.userPage.editProfile
 import com.example.mobilne2.userPage.modelUI.UserUI
 
 data class EditProfileState(
-    val fatching: Boolean = false,
+    val loading: Boolean = false,
     val user : UserUI? = null,
+    val reset : Boolean = false,
+    val usersParts: List<String> = listOf("firstName", "lastName", "nickname"),
     val firstName: String = "",
     val lastName: String = "",
     val nickname: String = "",
@@ -17,6 +19,7 @@ data class EditProfileState(
         data class EditLastName(val lastName: String) : Events()
         data class EditNickname(val nickname: String) : Events()
         data class EditEmail(val email: String) : Events()
+        data class Reset(val reset: Boolean) : Events()
     }
 
     sealed class Error (val message: String){
