@@ -58,7 +58,7 @@ class MyProfileViewModel @Inject constructor(
                 setState { copy(usersPerPage = usersPerPage)}
 
             } catch (error: Exception) {
-                setState { copy(error = MyProfileState.Error.LoadingFailed) }
+                setState { copy(error = MyProfileState.Error.LoadingFailed()) }
             } finally {
                 setState {  copy(loading = false) }
             }

@@ -86,7 +86,7 @@ fun MyProfileScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = "Profile not found",
+                                text = data.error.message,
                                 color = Color.Red,
                                 fontSize = 24.sp
                             )

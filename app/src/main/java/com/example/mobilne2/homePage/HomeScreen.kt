@@ -20,7 +20,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import kotlin.math.round
 
 fun NavGraphBuilder.homeScreen(
     route: String,
@@ -34,18 +33,35 @@ fun NavGraphBuilder.homeScreen(
 
     HomeScreen(
         navController = navController,
-        state = state.value,
+        data = state.value,
     )
 }
 
 @Composable
 fun HomeScreen(
     navController: NavController,
-    state: HomeState,
+    data: HomeState,
 ) {
     Scaffold(
         content = { paddingValues ->
-            if(!state.fetching){
+            if(data.error != null && data.error is HomeState.Error.LoadingFailed){
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Top
+                    ) {
+                        Text(
+                            text = data.error.message,
+                            fontSize = 36.sp,
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .padding(top = 64.dp)
+                                .padding(bottom = 32.dp)
+                        )
+                    }
+            } else if(!data.fetching){
                 Column(
                     modifier = Modifier
                         .fillMaxSize()

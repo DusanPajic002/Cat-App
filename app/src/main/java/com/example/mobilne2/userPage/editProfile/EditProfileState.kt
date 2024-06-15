@@ -5,6 +5,10 @@ import com.example.mobilne2.userPage.modelUI.UserUI
 data class EditProfileState(
     val fatching: Boolean = false,
     val user : UserUI? = null,
+    val firstName: String = "",
+    val lastName: String = "",
+    val nickname: String = "",
+    val email: String = "",
     val error: Error? = null,
 ){
 
@@ -15,12 +19,12 @@ data class EditProfileState(
         data class EditEmail(val email: String) : Events()
     }
 
-    sealed class Error {
-        data object LoadingFailed : Error()
-        data object BadFirstName: Error()
-        data object BadLastName : Error()
-        data object BadNickname : Error()
-        data object BadEmail : Error()
-        data object PersonExist : Error() // stavi tryblock i catch block hvata ako baza vrati abort
+    sealed class Error (val message: String){
+        class PersonExist : Error("Person already exists, change your nickname.")
+        class LoadingFailed : Error("Failed to load data.")
+        class BadFirstName : Error("Please enter your firstname in the format 'Firstname'.")
+        class BadLastName : Error("Please enter your lastname in the format 'Lastname'.")
+        class BadNickname : Error("You can only use letters, numbers and underscore '_'.")
+        class BadEmail : Error("Please enter your email in the format email@email.com.")
     }
 }

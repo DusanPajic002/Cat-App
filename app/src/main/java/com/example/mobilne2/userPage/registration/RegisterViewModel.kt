@@ -38,7 +38,7 @@ class RegisterViewModel @Inject constructor(
                 setState { copy(exist = exist) }
             } catch (error: Exception) {
                 println("Errorr: ${error.message}")
-                setState { copy(error = RegisterState.Error.LoadingFaild) }
+                setState { copy(error = RegisterState.Error.LoadingFailed()) }
             } finally {
                 setState {  copy(fatching = false) }
             }
@@ -59,13 +59,13 @@ class RegisterViewModel @Inject constructor(
                             "^[A-Za-z0-9_]{3,}@[A-Za-z0-9_]{3,}\\.[A-Za-z0-9_]{2,}$".toRegex()
 
                         if (fullName.isEmpty() || email.isEmpty() || nickname.isEmpty()) {
-                            setState { copy(error = RegisterState.Error.MissingParts) }
+                            setState { copy(error = RegisterState.Error.MissingParts()) }
                         } else if (fullName.isNotEmpty() && !fullName.matches(fullNameRegex)) {
-                            setState { copy(error = RegisterState.Error.BadFullName) }
+                            setState { copy(error = RegisterState.Error.BadFullName()) }
                         } else if (nickname.isNotEmpty() && !nickname.matches(nicknameRegex)) {
-                            setState { copy(error = RegisterState.Error.BadNickname) }
+                            setState { copy(error = RegisterState.Error.BadNickname()) }
                         } else if (email.isNotEmpty() && !email.matches(emailRegex)) {
-                            setState { copy(error = RegisterState.Error.BadEmail) }
+                            setState { copy(error = RegisterState.Error.BadEmail()) }
                         } else {
                             val user = User(
                                 id = 0,
@@ -76,10 +76,10 @@ class RegisterViewModel @Inject constructor(
                             )
                             try {
                                 repository.insertUser(user)
+                                setState {copy(SuccesRegister = true)}
                             } catch (error: Exception) {
-                                setState { copy(error = RegisterState.Error.PersonExist) }
+                                setState { copy(error = RegisterState.Error.PersonExist()) }
                             }
-                            setState {copy(SuccesRegister = true)}
                         }
                     }
                 }

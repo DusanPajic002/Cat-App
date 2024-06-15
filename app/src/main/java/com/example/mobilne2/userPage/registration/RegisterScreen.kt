@@ -55,23 +55,10 @@ fun RegisterScreen(
             .fillMaxSize()
             .clickable { focusManager.clearFocus() },
         content = { paddingValues ->
-            if(data.error != null && data.error is RegisterState.Error.PersonExist) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "User already exist",
-                        color = Color.Red,
-                        fontSize = 24.sp
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(onClick = { onItemClick() }) {
-                        Text("Go to home")
-                    }
-                }
-            } else if (!data.fatching) {
+
+            if(data.error != null && data.error is RegisterState.Error.LoadingFailed)
+                ErrorHandler(data.error.message)
+            else if (!data.fatching) {
                 var fullName by remember { mutableStateOf("") }
                 var nickname by remember { mutableStateOf("") }
                 var email by remember { mutableStateOf("") }
@@ -83,20 +70,10 @@ fun RegisterScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (data.error != null && data.error is RegisterState.Error.MissingParts) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(0.8f),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = "All fields are mandatory",
-                                color = Color.Red,
-                                fontSize = 16.sp
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
+                    if(data.error != null && data.error is RegisterState.Error.PersonExist)
+                        ErrorHandler(data.error.message)
+                    if (data.error != null && data.error is RegisterState.Error.MissingParts)
+                        ErrorHandler(data.error.message)
                     OutlinedTextField(
                         value = fullName,
                         onValueChange = { fullName = it },
@@ -106,43 +83,22 @@ fun RegisterScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-                    if (data.error != null && data.error is RegisterState.Error.BadFullName) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(0.8f),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = "Please enter your name in the format 'Name Surname'",
-                                color = Color.Red,
-                                fontSize = 16.sp
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
+                    if (data.error != null && data.error is RegisterState.Error.BadFullName)
+                        ErrorHandler(data.error.message)
+
                     OutlinedTextField(
                         value = nickname,
                         onValueChange = { nickname = it },
                         label = { Text("Nickname") },
                         singleLine = true,
-                        isError = data.error != null && data.error is RegisterState.Error.BadNickname,
+                        isError = data.error != null &&
+                                (data.error is RegisterState.Error.BadNickname || data.error is RegisterState.Error.PersonExist),
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-                    if (data.error != null && data.error is RegisterState.Error.BadNickname) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(0.8f),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = "You can only use letters, numbers and underscore '_'",
-                                color = Color.Red,
-                                fontSize = 16.sp
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
+                    if (data.error != null && data.error is RegisterState.Error.BadNickname)
+                        ErrorHandler(data.error.message)
+
                     OutlinedTextField(
                         value = email,
                         onValueChange = { email = it },
@@ -152,20 +108,8 @@ fun RegisterScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-                    if (data.error != null && data.error is RegisterState.Error.BadEmail) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(0.8f),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = "Please enter your email in the format email@email.com",
-                                color = Color.Red,
-                                fontSize = 16.sp
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
+                    if (data.error != null && data.error is RegisterState.Error.BadEmail)
+                        ErrorHandler(data.error.message)
                     Button(
                         onClick = {
                             eventPublisher(RegisterState.Events.Register(fullName, nickname, email))
@@ -183,7 +127,21 @@ fun RegisterScreen(
 }
 
 @Composable
-fun ErrorHandler(){
+fun ErrorHandler(
+    message: String
+){
+    Row(
+        modifier = Modifier.fillMaxWidth(0.8f),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = message,
+            color = Color.Red,
+            fontSize = 16.sp
+        )
+    }
+    Spacer(modifier = Modifier.height(16.dp))
 
 }
 

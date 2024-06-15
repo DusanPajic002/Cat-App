@@ -35,7 +35,7 @@ class EditProfileViewModel @Inject constructor(
             try {
 
             } catch (error: Exception) {
-                setState { copy(error = EditProfileState.Error.LoadingFailed) }
+                setState { copy(error = EditProfileState.Error.LoadingFailed()) }
             } finally {
                 setState {  copy(fatching = false) }
             }
@@ -50,7 +50,7 @@ class EditProfileViewModel @Inject constructor(
                         val firstName = it.firstName
                         val firstNameRegex = "^[A-Z][a-z]{3,}$".toRegex()
                         if (firstName.isEmpty() || !firstNameRegex.matches(firstName)) {
-                            setState { copy(error = EditProfileState.Error.BadFirstName) }
+                            setState { copy(error = EditProfileState.Error.BadFirstName()) }
                         }else{
                             val userID = state.value.user?.id
                             if (userID != null) {
@@ -62,7 +62,7 @@ class EditProfileViewModel @Inject constructor(
                         val lastName = it.lastName
                         val lastNameRegex = "^[A-Z][a-z]{3,}$".toRegex()
                         if (lastName.isEmpty() || !lastNameRegex.matches(lastName)) {
-                            setState { copy(error = EditProfileState.Error.BadLastName) }
+                            setState { copy(error = EditProfileState.Error.BadLastName()) }
                         }else{
                             val userID = state.value.user?.id
                             if (userID != null) {
@@ -74,11 +74,15 @@ class EditProfileViewModel @Inject constructor(
                         val nickname = it.nickname
                         val nicknameRegex = "^[A-Za-z0-9_]{3,}$".toRegex()
                         if (nickname.isEmpty() || !nicknameRegex.matches(nickname)) {
-                            setState { copy(error = EditProfileState.Error.BadNickname) }
+                            setState { copy(error = EditProfileState.Error.BadNickname()) }
                         }else{
                             val userID = state.value.user?.id
                             if (userID != null) {
-                                repository.updateNickname(userID, nickname)
+                                try {
+                                    repository.updateNickname(userID, nickname)
+                                } catch (e: Exception) {
+                                    setState { copy(error = EditProfileState.Error.PersonExist()) }
+                                }
                             }
                         }
                     }
@@ -86,7 +90,7 @@ class EditProfileViewModel @Inject constructor(
                         val email = it.email
                         val emailRegex ="^[A-Za-z0-9_]{3,}@[A-Za-z0-9_]{3,}\\.[A-Za-z0-9_]{2,}$".toRegex()
                         if (email.isEmpty() || !emailRegex.matches(email)) {
-                            setState { copy(error = EditProfileState.Error.BadEmail) }
+                            setState { copy(error = EditProfileState.Error.BadEmail()) }
                         }else {
                             val userID = state.value.user?.id
                             if (userID != null) {
@@ -94,6 +98,7 @@ class EditProfileViewModel @Inject constructor(
                             }
                         }
                     }
+
                 }
             }
         }

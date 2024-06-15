@@ -8,7 +8,6 @@ import androidx.room.PrimaryKey
     tableName = "users",
     indices = [
         Index(value = ["nickname"], unique = true),
-        Index(value = ["email"], unique = true),
     ]
 )
 data class User(

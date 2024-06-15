@@ -20,8 +20,8 @@ data class MyProfileState(
         data class changePage(val changePage: Int) : Events()
     }
 
-    sealed class Error {
-        data object LoadingFailed : Error()
+    sealed class Error(val message: String) {
+        class LoadingFailed : Error("Profile not found")
     }
 
 }

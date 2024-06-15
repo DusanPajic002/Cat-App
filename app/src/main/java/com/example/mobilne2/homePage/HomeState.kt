@@ -7,11 +7,11 @@ data class HomeState (
     var fetchedCats: Boolean = true,
     var fetching2: Boolean = false,
     var cats: List<Cat> = emptyList(),
-    var error: DetailsError? = null
+    val error: Error? = null,
 ) {
 
-    sealed class DetailsError {
-        data class DataUpdateFailed(val cause: Throwable) : DetailsError()
+    sealed class Error(val message: String) {
+        class LoadingFailed : Error("Failed to load data.")
     }
 
 
