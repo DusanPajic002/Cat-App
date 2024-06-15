@@ -2,6 +2,7 @@ package com.example.mobilne2.userPage.myProfile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mobilne2.leaderBoardP.leaderBoard.LeaderBState
 import com.example.mobilne2.leaderBoardP.mapper.asLeaderBoardUI
 import com.example.mobilne2.leaderBoardP.repository.LeaderBoardRepository
 import com.example.mobilne2.userPage.repository.UserRepostiory
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.min
 
 @HiltViewModel
 class MyProfileViewModel @Inject constructor(
@@ -42,13 +44,13 @@ class MyProfileViewModel @Inject constructor(
                 val publicLB = repositoryLB.getLeaderBoardOnline(1).map { it.asLeaderBoardUI() }
                 setState { copy(publicLB = publicLB ) }
 
-                val privateLB = repositoryLB.getPLBbyNickName(user.nickname).map { it.asLeaderBoardUI() }
+                val privateLB = repositoryLB.getPLBbyUserID(user.id).map { it.asLeaderBoardUI() }
                 setState { copy(privateLB = privateLB ) }
 
-                val leaderBoard = publicLB + privateLB
+                val leaderBoard = (publicLB + privateLB).sortedByDescending { it.createdAt }
                 setState { copy(leaderBoard = leaderBoard) }
 
-                setState { copy(maxPage = leaderBoard.size/state.value.dataPerPage + 1 ) }
+                setState { copy(maxPage = leaderBoard.size/state.value.dataPerPage + (leaderBoard.size/state.value.dataPerPage)%2 ) }
 
                 val usersPerPage = state.value.leaderBoard.subList(0, state.value.dataPerPage)
                 setState { copy(usersPerPage = usersPerPage)}
@@ -65,9 +67,13 @@ class MyProfileViewModel @Inject constructor(
         viewModelScope.launch {
             events.collect {
                 when (it) {
+                    is MyProfileState.Events.changePage -> {
+                        setState { copy(page = it.changePage) }
+                        val start = (state.value.page - 1) * state.value.dataPerPage
+                        val end = min(start + state.value.dataPerPage, state.value.leaderBoard.size)
 
-                    else -> {
-                        // do nothing
+                        val usersPerPage = state.value.leaderBoard.subList(start, end)
+                        setState { copy(usersPerPage = usersPerPage)}
                     }
                 }
             }

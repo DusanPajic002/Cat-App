@@ -55,19 +55,6 @@ fun RegisterScreen(
             .clickable { focusManager.clearFocus() },
         content = { paddingValues ->
             if (!data.fatching) {
-                if(data.error != null && data.error is UserState.Error.PersonExist) {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "User already exist",
-                            color = Color.Red,
-                            fontSize = 24.sp
-                        )
-                    }
-                }
                 var fullName by remember { mutableStateOf("") }
                 var nickname by remember { mutableStateOf("") }
                 var email by remember { mutableStateOf("") }
@@ -79,6 +66,24 @@ fun RegisterScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    if(data.error != null && data.error is UserState.Error.PersonExist) {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "User already exist",
+                                color = Color.Red,
+                                fontSize = 24.sp
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Button(onClick = { onItemClick() }) {
+                                Text("Go to home")
+                            }
+                        }
+                        return@Scaffold
+                    }
                     if (data.error != null && data.error is UserState.Error.MissingParts) {
                         Row(
                             modifier = Modifier.fillMaxWidth(0.8f),

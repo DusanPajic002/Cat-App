@@ -15,10 +15,10 @@ import com.example.mobilne2.userPage.db.UserDao
     entities = [
         Cat::class,
         CatImages::class,
+        User::class,
         LeaderBoard::class,
-        User::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = true,
 )
 abstract class AppDatabase : RoomDatabase() {

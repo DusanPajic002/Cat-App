@@ -20,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import kotlin.math.round
 
 fun NavGraphBuilder.homeScreen(
     route: String,
@@ -94,7 +95,7 @@ fun HomeScreen(
                         )
                     }
                     Button(
-                        onClick = { null },
+                        onClick = { navController.navigate(route = "myProfile") },
                         modifier = Modifier
                             .padding(8.dp)
                             .size(width = 200.dp, height = 50.dp)

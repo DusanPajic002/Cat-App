@@ -5,6 +5,7 @@ import com.example.mobilne2.userPage.db.User
 
 data class QuizState(
     val userNickname: String = "Unknown",
+    val userID: Int = 0,
     val questionNumber: Int = 0,
     val loading: Boolean = true,
     val score: Double = 0.0,

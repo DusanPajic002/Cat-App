@@ -18,6 +18,9 @@ class LeaderBoardRepository @Inject constructor(
     suspend fun getPLBbyNickName(nickname: String): List<LeaderBoard> {
         return database.leaderBoardDao().getPLBbyNickName(nickname)
     }
+    suspend fun getPLBbyUserID(userID: Int): List<LeaderBoard> {
+        return database.leaderBoardDao().getPLBbyUserID(userID)
+    }
     suspend fun getLeaderBoardOnline(category: Int): List<LeaderBoardApiModel> {
         return leaderBoardApi.getLeaderboard(category)
     }

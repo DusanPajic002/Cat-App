@@ -13,6 +13,9 @@ interface LeaderBoardDao {
     @Query("SELECT * FROM leaderboard WHERE nickname = :nickname")
     suspend fun getPLBbyNickName(nickname: String): List<LeaderBoard>
 
+    @Query("SELECT * FROM leaderboard WHERE userID = :userID")
+    suspend fun getPLBbyUserID(userID: Int): List<LeaderBoard>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertToLeaderBoard(leaderBoard: LeaderBoard)
 

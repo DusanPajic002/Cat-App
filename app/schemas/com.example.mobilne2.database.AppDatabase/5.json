@@ -1,7 +1,7 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 4,
+    "version": 5,
     "identityHash": "d94799810042ab8a63c880c4527f5274",
     "entities": [
       {
@@ -285,6 +285,50 @@
         "foreignKeys": []
       },
       {
+        "tableName": "users",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `nickname` TEXT NOT NULL, `email` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "firstName",
+            "columnName": "firstName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastName",
+            "columnName": "lastName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nickname",
+            "columnName": "nickname",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
         "tableName": "LeaderBoard",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `category` INTEGER NOT NULL, `userID` INTEGER NOT NULL, `nickname` TEXT NOT NULL, `result` REAL NOT NULL, `createdAt` INTEGER NOT NULL)",
         "fields": [
@@ -322,50 +366,6 @@
             "fieldPath": "createdAt",
             "columnName": "createdAt",
             "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": true,
-          "columnNames": [
-            "id"
-          ]
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "users",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `nickname` TEXT NOT NULL, `email` TEXT NOT NULL)",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "firstName",
-            "columnName": "firstName",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "lastName",
-            "columnName": "lastName",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "nickname",
-            "columnName": "nickname",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "email",
-            "columnName": "email",
-            "affinity": "TEXT",
             "notNull": true
           }
         ],

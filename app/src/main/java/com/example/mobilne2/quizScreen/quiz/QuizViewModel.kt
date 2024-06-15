@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.Instant
+import java.time.LocalTime
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -73,10 +73,12 @@ class QuizViewModel @Inject constructor(
                             )
                             repository.pusblishOnline(leaderBoardData)
                         }else{
+                            val time = LocalTime.now().toSecondOfDay()
                             val leaderBoardData = LeaderBoard(
+                                userID = state.value.userID,
                                 nickname = state.value.userNickname,
                                 result = state.value.score,
-                                createdAt = Instant.now().epochSecond
+                                createdAt = time.toLong(),
                             )
                             repository.pusblishPrivate(leaderBoardData)
                         }
@@ -95,8 +97,8 @@ class QuizViewModel @Inject constructor(
                 val breed = allCats.map { it.origin }.distinct()
                 val cats20 = allCats.filter { !it.id.equals("mala") }.shuffled().take(20)
                 val user = repository.getUserByID(1)
-                if(user != null)
-                    setState { copy(userNickname = user.nickname)}
+                setState { copy(userNickname = user.nickname)}
+                setState { copy(userID = user.id)}
 
                 cats20.forEach { cat ->
                     withContext(Dispatchers.IO) {

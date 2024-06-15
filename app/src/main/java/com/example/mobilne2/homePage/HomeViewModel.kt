@@ -31,7 +31,10 @@ class HomeViewModel @Inject constructor(
             setState { copy(fetching = true) }
             try {
                 withContext(Dispatchers.IO){repositoryList.fetchAllCats()}
+                val cat = repositoryList.getAllCats()
+
             } catch (error: Exception) {
+                //setState { copy(error = HomeState.Error.FetchError) }
             } finally {
                 setState { copy(fetching = false) }
             }

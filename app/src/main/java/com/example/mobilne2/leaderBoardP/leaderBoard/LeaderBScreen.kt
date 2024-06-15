@@ -77,7 +77,9 @@ fun LeaderBScreen(
                             Button(onClick = {
                                 onClose()
                             },
-                                modifier = Modifier.padding(8.dp).size(145.dp, 47.dp)
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .size(145.dp, 47.dp)
                             ){
                                 Text(text = "Go to Home")
                             }
@@ -97,7 +99,6 @@ fun LeaderBScreen(
                             data = data,
                             eventPublisher = eventPublisher
                         )
-
                         LazyColumn(
                             modifier = Modifier
                                 .background(Color(0xFFF0F0FF))
@@ -125,8 +126,6 @@ fun LeaderBScreen(
                                 }
                                 items(items.size) { index ->
                                     val player = items[index]
-                                    println(player.createdAt)
-                                    println("-----------------")
                                     val date = Date(player.createdAt)
                                     val format =
                                         SimpleDateFormat("dd.MM.yyyy. | HH:mm", Locale.getDefault())

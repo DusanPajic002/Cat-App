@@ -10,7 +10,7 @@ data class MyProfileState(
     val leaderBoard : List<LeaderBoardUI> = emptyList(),
     val usersPerPage : List<LeaderBoardUI> = emptyList(),
     val page : Int = 1,
-    val dataPerPage : Int = 10,
+    val dataPerPage : Int = 8,
     val maxPage : Int = 1,
     val user: User? = null,
     val error: Error? = null,

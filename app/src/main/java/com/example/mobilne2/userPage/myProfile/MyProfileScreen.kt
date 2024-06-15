@@ -1,5 +1,6 @@
 package com.example.mobilne2.userPage.myProfile
 
+import androidx.compose.foundation.background
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -10,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -17,13 +19,17 @@ import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 fun NavGraphBuilder.myProfileScreen(
     route: String,
     onClose: () -> Unit,
-    onEditProfileClick: () -> Unit,
+    onItemCLick: () -> Unit,
 ) = composable(
     route = route,
 ) { navBackStackEntry ->
@@ -33,7 +39,7 @@ fun NavGraphBuilder.myProfileScreen(
 
     MyProfileScreen(
         data = state.value,
-        onEditProfileClick = onEditProfileClick,
+        onItemCLick = onItemCLick,
         onClose = onClose,
         eventPublisher = {
             myProfileViewModel.setEvent(it)
@@ -45,18 +51,16 @@ fun NavGraphBuilder.myProfileScreen(
 @Composable
 fun MyProfileScreen(
     data: MyProfileState,
-    onEditProfileClick: () -> Unit,
+    onItemCLick: () -> Unit,
     onClose: () -> Unit,
     eventPublisher: (MyProfileState.Events) -> Unit,
 ) {
-    val focusManager = LocalFocusManager.current
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .clickable { focusManager.clearFocus() },
+            .fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("LeaderBoard", color = Color.White) },
+                title = { Text("MyProfile", color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { onClose() }) {
                         Icon(
@@ -89,38 +93,165 @@ fun MyProfileScreen(
                     }
                 }
             } else {
-                LazyColumn(
+                Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues)
                         .padding(16.dp),
                     verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.Start
                 ) {
-                    item {
-                        Text(
-                            text = "Name: ${data.user?.firstName} ${data.user?.lastName}",
-                            fontSize = 20.sp,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }
-                    item {
-                        Text(
-                            text = "Email: ${data.user?.email}",
-                            fontSize = 20.sp,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }
-                    item {
-                        Button(
-                            onClick = onEditProfileClick,
-                            modifier = Modifier.padding(16.dp)
+                    // User Information Card
+                    Card(
+                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            verticalArrangement = Arrangement.Top,
+                            horizontalAlignment = Alignment.Start
                         ) {
-                            Text("Edit profile")
+                            Text(
+                                text = "Name: ${data.user?.firstName ?: "N/A"}",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                            Text(
+                                text = "Surname: ${data.user?.lastName ?: "N/A"}",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                            Text(
+                                text = "Nickname: ${data.user?.nickname ?: "N/A"}",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                            Text(
+                                text = "Email: ${data.user?.email ?: "N/A"}",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
                         }
+                    }
+                    Spacer(modifier = Modifier.height(6.dp))
+                    LeaderBoardList(
+                        data = data,
+                        eventPublisher = eventPublisher
+                    )
+                }
+
+            }
+        }
+    )
+}
+
+@Composable
+private fun LeaderBoardList(
+    data: MyProfileState,
+    eventPublisher: (MyProfileState.Events) -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .padding(start = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(
+                onClick = {
+                    if (data.page > 1) {
+                        eventPublisher(MyProfileState.Events.changePage(data.page - 1))
+                    }
+                },
+                enabled = data.page > 1
+            ) {
+                Text("<---", fontSize = 20.sp)
+            }
+            Button(
+                onClick = {
+                    if (data.page < data.maxPage)
+                        eventPublisher(MyProfileState.Events.changePage(data.page + 1))
+                },
+                enabled = data.page < data.maxPage
+            ) {
+                Text("--->", fontSize = 20.sp)
+            }
+        }
+        LazyColumn(
+            modifier = Modifier
+                .background(Color(0xFFF0F0FF))
+        ) {
+            val groupedData = data.usersPerPage.groupBy { it.category }
+            groupedData.forEach { (category, items) ->
+                item {
+                    val categoryName = when (category) {
+                        1 -> "Guess the Fact"
+                        2 -> "Guess the Cat"
+                        3 -> "Left or Right Cat"
+                        else -> "Unknown"
+                    }
+                    Text(
+                        text = categoryName,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color(0xFFf5d749))
+                            .padding(16.dp),
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+                    Spacer(modifier = Modifier.height(14.dp))
+                }
+                items(items.size) { index ->
+                    val player = items[index]
+                    val date = Date(player.createdAt)
+                    val format =
+                        SimpleDateFormat("dd.MM.yyyy. | HH:mm", Locale.getDefault())
+                    val formattedTime = format.format(date)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(14.dp)
+                            .background(Color.White)
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            val rank =
+                                index + 1 + (data.page - 1) * data.dataPerPage
+                            Text(
+                                text = "${rank}. ${player.nickname}",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+                            Text(
+                                text = formattedTime,
+                                fontSize = 12.sp,
+                                color = Color.Gray
+                            )
+                        }
+                        Text(
+                            text = player.result.toString(),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
+                        )
                     }
                 }
             }
         }
-    )
+
+    }
 }

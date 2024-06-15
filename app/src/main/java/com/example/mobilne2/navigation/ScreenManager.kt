@@ -12,6 +12,7 @@ import com.example.mobilne2.catProfile.catProfileScreen
 import com.example.mobilne2.homePage.homeScreen
 import com.example.mobilne2.leaderBoardP.leaderBoard.leaderBScreen
 import com.example.mobilne2.quizScreen.quiz.quizScreen
+import com.example.mobilne2.userPage.myProfile.myProfileScreen
 import com.example.mobilne2.userPage.registration.registerScreen
 
 
@@ -68,6 +69,15 @@ fun ScreenManager() {
             onClose = {
                 navController.navigateUp()
             },
+        )
+        myProfileScreen(
+            route = "myProfile",
+            onItemCLick = {
+                navController.navigate(route = "leaderBoard")
+            },
+            onClose = {
+                navController.navigateUp()
+            }
         )
         quizScreen(
             route = "quiz",
