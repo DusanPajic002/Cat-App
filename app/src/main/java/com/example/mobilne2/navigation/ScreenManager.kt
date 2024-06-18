@@ -1,5 +1,11 @@
 package com.example.mobilne2.navigation
 
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.SavedStateHandle
@@ -26,6 +32,30 @@ fun ScreenManager() {
     NavHost(
         navController = navController,
         startDestination = "registerScreen",
+        enterTransition = {
+            slideInHorizontally(
+                animationSpec = tween(durationMillis = 400),
+                initialOffsetX = { it },
+            )
+        },
+        exitTransition = {
+            scaleOut(
+                targetScale = 1.2f,
+                animationSpec = tween(durationMillis = 400)
+            )
+        },
+        popEnterTransition = {
+            scaleIn(
+                initialScale = 1.2f,
+                animationSpec = tween(durationMillis = 400)
+            )
+        },
+        popExitTransition = {
+            slideOutHorizontally(
+                animationSpec = tween(durationMillis = 400),
+                targetOffsetX = { it }
+            )
+        },
     ) {
 
         homeScreen(

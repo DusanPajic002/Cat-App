@@ -2,6 +2,7 @@ package com.example.mobilne2.catProfile
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,6 +33,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -40,7 +42,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import coil.compose.AsyncImage
+import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
+import com.example.mobilne2.R
 import com.example.mobilne2.catProfile.profile.CatProfileState
 import com.example.mobilne2.catProfile.profile.CatProfileViewModel
 import com.example.mobilne2.catProfile.profile.model.CatProfileUI
@@ -71,33 +75,37 @@ fun CatProfile(
     data: CatProfileState,
     onClose: () -> Unit,
     onItemClick: (String) -> Unit,
-){
+) {
     Scaffold(
         topBar = {
-            Column {
-                CenterAlignedTopAppBar(
-                    title = { Text(text = "Profile") },
-                    navigationIcon = {
-                        IconButton(onClick = { onClose() }) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "Back",
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                        containerColor = Color(0xFFE18C44)
-                    )
+            CenterAlignedTopAppBar(
+                title = { Text(text = "Profile") },
+                navigationIcon = {
+                    IconButton(onClick = { onClose() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color(0xFFE18C44)
                 )
-            }
+            )
         },
-        content = {paddingValues ->
+        content = { paddingValues ->
+            Image(
+                painter = rememberImagePainter(data = R.drawable.image),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                if(data.error != null){
+                if (data.error != null) {
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center,
@@ -108,13 +116,13 @@ fun CatProfile(
                         }
                         Text(text = errorMessage)
                     }
-                }else if (!data.fetching && data.cat != null) {
+                } else if (!data.fetching && data.cat != null) {
                     CatData(
                         cat = data.cat,
                         onItemClick = onItemClick,
                         imageUrl = (data.image?.url ?: "")
                     )
-                }else if (data.fetching){
+                } else if (data.fetching) {
                     LoadingCatProfile()
                 }
             }
@@ -154,7 +162,7 @@ private fun CatData(
             modifier = Modifier
                 .fillMaxSize()
                 .clickable {
-                     onItemClick(cat.id)
+                    onItemClick(cat.id)
                 }
         )
         Text(

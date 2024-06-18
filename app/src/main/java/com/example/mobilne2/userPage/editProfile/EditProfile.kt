@@ -1,5 +1,15 @@
 package com.example.mobilne2.userPage.editProfile
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +30,8 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -41,6 +54,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -48,6 +62,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import coil.compose.rememberImagePainter
+import com.example.mobilne2.R
+import kotlinx.coroutines.delay
 import org.xml.sax.ErrorHandler
 
 fun NavGraphBuilder.editProfile(
@@ -140,6 +157,12 @@ private fun EditProfile(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Top
                 ) {
+                    Image(
+                        painter = rememberImagePainter(data = R.drawable.image),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
                     Spacer(modifier = Modifier.height(32.dp))
                     ProfileRow(
                         label = "First Name",
@@ -181,6 +204,7 @@ private fun EditProfile(
     )
 
 }
+
 @Composable
 fun ProfileRow(
     label: String,
@@ -195,67 +219,75 @@ fun ProfileRow(
             .fillMaxWidth()
             .background(Color.White, shape = RoundedCornerShape(8.dp))
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (edit) {
-            TextField(
-                value = value,
-                onValueChange = onValueChange,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 8.dp),
-                label = { Text(label) },
-                colors = TextFieldDefaults.colors(
-                    unfocusedContainerColor = Color(0xFFEAEAEA),
-                    focusedContainerColor = Color(0xFFEAEAEA),
-                    focusedIndicatorColor = Color.Black,
-                    unfocusedPlaceholderColor = Color.Gray,
-                    focusedPlaceholderColor = Color.Gray,
-                    cursorColor = Color.Black,
-                ),
-            )
-        } else {
-            Text(
-                text = value,
-                modifier = Modifier.weight(1f),
-                fontSize = 16.sp
-            )
-        }
 
-        if (edit) {
-            IconButton(onClick = {
-                edit = false
-                callEvent()},
-                modifier = Modifier
-                    .background(Color(0xFFB0FF9B), shape = CircleShape)
-                    .padding(end = 6.dp, start = 6.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Check,
-                    contentDescription = "Save"
-                )
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            IconButton(onClick = {
-                edit = false
-                eventPublisher(EditProfileState.Events.Reset(true))},
-                modifier = Modifier
-                    .background(Color(0xFFFF8B8B), shape = CircleShape)
-                    .padding(end = 6.dp, start = 6.dp),
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Cancel"
-                )
-            }
-        } else { // 0xFF //
-            IconButton(
-                onClick = { edit = true },
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit"
-                )
+    ) {
+
+        Crossfade(targetState = edit) { isEditing ->
+            if (isEditing) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    TextField(
+                        value = value,
+                        onValueChange = onValueChange,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 8.dp),
+                        label = { Text(label) },
+                        colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = Color(0xFFEAEAEA),
+                            focusedContainerColor = Color(0xFFEAEAEA),
+                            focusedIndicatorColor = Color.Black,
+                            unfocusedPlaceholderColor = Color.Gray,
+                            focusedPlaceholderColor = Color.Gray,
+                            cursorColor = Color.Black,
+                        ),
+                    )
+                    IconButton(
+                        onClick = {
+                            edit = false
+                            callEvent()
+                        },
+                        modifier = Modifier
+                            .background(Color(0xFFB0FF9B), shape = CircleShape)
+                            .padding(end = 6.dp, start = 6.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = "Save"
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    IconButton(
+                        onClick = {
+                            edit = false
+                            eventPublisher(EditProfileState.Events.Reset(true))
+                        },
+                        modifier = Modifier
+                            .background(Color(0xFFFF8B8B), shape = CircleShape)
+                            .padding(end = 6.dp, start = 6.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Cancel"
+                        )
+                    }
+
+                }
+            } else {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = value,
+                        modifier = Modifier.weight(1f),
+                        fontSize = 16.sp
+                    )
+                    IconButton(
+                        onClick = { edit = true },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit"
+                        )
+                    }
+                }
             }
         }
     }

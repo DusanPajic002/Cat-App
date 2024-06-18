@@ -1,5 +1,6 @@
 package com.example.mobilne2.userPage.myProfile
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -20,9 +21,12 @@ import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
+import com.example.mobilne2.R
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -77,6 +81,12 @@ fun MyProfileScreen(
             )
         },
         content = { paddingValues ->
+            Image(
+                painter = rememberImagePainter(data = R.drawable.image),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
             if (data.error != null) {
                 when (data.error) {
                     is MyProfileState.Error.LoadingFailed -> {
@@ -105,6 +115,7 @@ fun MyProfileScreen(
                     Card(
                         modifier = Modifier
                             .fillMaxWidth(),
+                        colors = CardDefaults.cardColors(containerColor = Color.White)
                     ) {
                         Box(
                             modifier = Modifier
@@ -116,18 +127,13 @@ fun MyProfileScreen(
                                     .align(Alignment.TopStart)
                                     .padding(end = 48.dp),
                                 verticalArrangement = Arrangement.Top,
-                                horizontalAlignment = Alignment.Start
+                                horizontalAlignment = Alignment.Start,
                             ) {
 
-                                val name = data.user.firstName
-                                val surname = data.user.lastName
-                                val nickname = data.user.nickname
-                                val email = data.user.email
-
-                                userInfoRow(text = "Name: $name")
-                                userInfoRow(text = "Surname: $surname")
-                                userInfoRow(text = "Nickname: $nickname")
-                                userInfoRow(text = "E-mail: $email")
+                                userInfoRow(text = "Name: ${data.user.firstName}")
+                                userInfoRow(text = "Surname: ${data.user.lastName}")
+                                userInfoRow(text = "Nickname: ${data.user.nickname}")
+                                userInfoRow(text = "E-mail: ${data.user.email}")
 
                             }
                             IconButton(

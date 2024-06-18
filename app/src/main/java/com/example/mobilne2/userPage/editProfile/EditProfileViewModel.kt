@@ -60,6 +60,7 @@ class EditProfileViewModel @Inject constructor(
                         val firstName = it.firstName
                         val firstNameRegex = "^[A-Z][a-z]{2,}$".toRegex()
                         if (firstName.isEmpty() || !firstNameRegex.matches(firstName)) {
+                            setEvent(EditProfileState.Events.Reset(true))
                             setState { copy(error = EditProfileState.Error.BadFirstName()) }
                         } else {
                             val userID = state.value.user?.id
@@ -73,6 +74,7 @@ class EditProfileViewModel @Inject constructor(
                         val lastName = it.lastName
                         val lastNameRegex = "^[A-Z][a-z]{2,}$".toRegex()
                         if (lastName.isEmpty() || !lastNameRegex.matches(lastName)) {
+                            setEvent(EditProfileState.Events.Reset(true))
                             setState { copy(error = EditProfileState.Error.BadLastName()) }
                         } else {
                             val userID = state.value.user?.id
@@ -86,6 +88,7 @@ class EditProfileViewModel @Inject constructor(
                         val nickname = it.nickname
                         val nicknameRegex = "^[A-Za-z0-9_]{3,}$".toRegex()
                         if (nickname.isEmpty() || !nicknameRegex.matches(nickname)) {
+                            setEvent(EditProfileState.Events.Reset(true))
                             setState { copy(error = EditProfileState.Error.BadNickname()) }
                         } else {
                             val userID = state.value.user?.id
@@ -94,6 +97,7 @@ class EditProfileViewModel @Inject constructor(
                                     repository.updateNickname(userID, nickname)
                                     setState { copy(nickname = nickname) }
                                 } catch (e: Exception) {
+                                    setEvent(EditProfileState.Events.Reset(true))
                                     setState { copy(error = EditProfileState.Error.PersonExist()) }
                                 }
                             }
@@ -104,6 +108,7 @@ class EditProfileViewModel @Inject constructor(
                         val emailRegex =
                             "^[A-Za-z0-9_]{3,}@[A-Za-z0-9_]{3,}\\.[A-Za-z0-9_]{2,}$".toRegex()
                         if (email.isEmpty() || !emailRegex.matches(email)) {
+                            setEvent(EditProfileState.Events.Reset(true))
                             setState { copy(error = EditProfileState.Error.BadEmail()) }
                         } else {
                             val userID = state.value.user?.id

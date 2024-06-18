@@ -1,5 +1,6 @@
 package com.example.mobilne2.catProfile.aGallery.gallery
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,6 +33,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -39,6 +41,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import coil.compose.rememberImagePainter
+import com.example.mobilne2.R
 import com.example.mobilne2.catProfile.aGallery.aPhoto.CatPhotoState
 import com.example.mobilne2.catProfile.profile.model.CatImageUI
 import com.example.mobilne2.core.compose.PhotoPreview
@@ -95,6 +99,12 @@ fun CatGalleryScreen(
             }
         },
         content = { paddingValues ->
+            Image(
+                painter = rememberImagePainter(data = R.drawable.image),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
             BoxWithConstraints(
                 modifier = Modifier.padding(paddingValues),
                 contentAlignment = Alignment.BottomCenter,
