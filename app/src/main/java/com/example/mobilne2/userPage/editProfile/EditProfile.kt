@@ -9,8 +9,10 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -115,6 +117,12 @@ private fun EditProfile(
             )
         },
         content = { paddingValues ->
+            Image(
+                painter = rememberImagePainter(data = R.drawable.image),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
             if (data.error != null && data.error is EditProfileState.Error.LoadingFailed) {
                 ErrorScreen(
                     message = data.error.message,
@@ -151,19 +159,10 @@ private fun EditProfile(
 
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color(0xFFF1F1F1)),
+                        .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Top
                 ) {
-                    Image(
-                        painter = rememberImagePainter(data = R.drawable.image),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                    Spacer(modifier = Modifier.height(32.dp))
                     ProfileRow(
                         label = "First Name",
                         value = firstName,
@@ -171,7 +170,6 @@ private fun EditProfile(
                         callEvent = { eventPublisher(EditProfileState.Events.EditFirstName(firstName)) },
                         eventPublisher = eventPublisher,
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
                     ProfileRow(
                         label = "Last Name",
                         value = lastName,
@@ -179,7 +177,6 @@ private fun EditProfile(
                         callEvent = { eventPublisher(EditProfileState.Events.EditLastName(lastName)) },
                         eventPublisher = eventPublisher,
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
                     ProfileRow(
                         label = "Email",
                         value = email,
@@ -187,7 +184,6 @@ private fun EditProfile(
                         callEvent = { eventPublisher(EditProfileState.Events.EditEmail(email)) },
                         eventPublisher = eventPublisher,
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
                     ProfileRow(
                         label = "Nickname",
                         value = nickname,
@@ -195,7 +191,6 @@ private fun EditProfile(
                         callEvent = { eventPublisher(EditProfileState.Events.EditNickname(nickname)) },
                         eventPublisher = eventPublisher,
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
             } else {
                 LoadingEditProfile()
@@ -214,14 +209,13 @@ fun ProfileRow(
     eventPublisher: (EditProfileState.Events) -> Unit,
 ) {
     var edit by remember { mutableStateOf(false) }
+    Spacer(modifier = Modifier.height(32.dp))
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White, shape = RoundedCornerShape(8.dp))
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .fillMaxWidth().background(Color.White, shape = RoundedCornerShape(8.dp))
+            .border(2.dp, Color.Black, shape = RoundedCornerShape(8.dp)).padding(horizontal = 16.dp, vertical = 8.dp),
 
     ) {
-
         Crossfade(targetState = edit) { isEditing ->
             if (isEditing) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
