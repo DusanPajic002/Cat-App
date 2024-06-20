@@ -132,17 +132,6 @@ private fun EditProfile(
                 return@Scaffold
             }
 
-            if (data.error != null) {
-                when (data.error) {
-                    is EditProfileState.Error.BadFirstName -> ErrorHandler(data.error.message)
-                    is EditProfileState.Error.BadLastName -> ErrorHandler(data.error.message)
-                    is EditProfileState.Error.BadNickname -> ErrorHandler(data.error.message)
-                    is EditProfileState.Error.BadEmail -> ErrorHandler(data.error.message)
-                    is EditProfileState.Error.PersonExist -> ErrorHandler(data.error.message)
-                    else -> {}
-                }
-            }
-
             if (!data.loading) {
                 var firstName by remember { mutableStateOf(data.firstName) }
                 var lastName by remember { mutableStateOf(data.lastName) }
@@ -159,10 +148,21 @@ private fun EditProfile(
 
                 Column(
                     modifier = Modifier
-                        .fillMaxSize(),
+                        .fillMaxSize()
+                        .padding(paddingValues),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Top
                 ) {
+                    if (data.error != null) {
+                        when (data.error) {
+                            is EditProfileState.Error.BadFirstName -> ErrorHandler(data.error.message)
+                            is EditProfileState.Error.BadLastName -> ErrorHandler(data.error.message)
+                            is EditProfileState.Error.BadNickname -> ErrorHandler(data.error.message)
+                            is EditProfileState.Error.BadEmail -> ErrorHandler(data.error.message)
+                            is EditProfileState.Error.PersonExist -> ErrorHandler(data.error.message)
+                            else -> {}
+                        }
+                    }
                     ProfileRow(
                         label = "First Name",
                         value = firstName,
@@ -179,7 +179,7 @@ private fun EditProfile(
                     )
                     ProfileRow(
                         label = "Email",
-                        value = email,
+                        value    = email,
                         onValueChange = { email = it },
                         callEvent = { eventPublisher(EditProfileState.Events.EditEmail(email)) },
                         eventPublisher = eventPublisher,
@@ -216,6 +216,7 @@ fun ProfileRow(
             .border(2.dp, Color.Black, shape = RoundedCornerShape(8.dp)).padding(horizontal = 16.dp, vertical = 8.dp),
 
     ) {
+
         Crossfade(targetState = edit) { isEditing ->
             if (isEditing) {
                 Row(verticalAlignment = Alignment.CenterVertically) {

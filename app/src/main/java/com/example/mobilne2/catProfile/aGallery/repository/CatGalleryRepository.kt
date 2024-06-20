@@ -19,9 +19,9 @@ class CatGalleryRepository @Inject constructor(
         return database.catProfileDao().getImagesByID(id)
     }
 
-    suspend fun fetchImages(catID: String){
-        println("---------dsa-" + catID)
-        val images = catsApi.getAllImages(catId = catID)
+    suspend fun fetchImages(catId: String){
+        println("---------dsa-" + catId)
+        val images = catsApi.getAllImages(catId = catId)
         println("---------dsa-" + images)
         println("---------dsa-" + images.size)
         //database.catProfileDao().insertAllImages(images)
