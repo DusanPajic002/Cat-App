@@ -2,16 +2,17 @@ package com.example.mobilne2.userPage.myProfile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mobilne2.leaderBoardP.leaderBoard.LeaderBState
 import com.example.mobilne2.leaderBoardP.mapper.asLeaderBoardUI
 import com.example.mobilne2.leaderBoardP.repository.LeaderBoardRepository
 import com.example.mobilne2.userPage.repository.UserRepostiory
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
@@ -42,7 +43,7 @@ class MyProfileViewModel @Inject constructor(
                 val user = repository.getUserByID(1)
                 setState { copy(user = user) }
 
-                val privateLB = repositoryLB.getPLBbyUserID(user.id).map { it.asLeaderBoardUI() }
+                val privateLB = withContext(Dispatchers.IO) { repositoryLB.getPLBbyUserID(user.id).map { it.asLeaderBoardUI() } }
                 setState { copy(privateLB = privateLB ) }
 
                 val leaderBoard = (privateLB).sortedByDescending { it.createdAt }

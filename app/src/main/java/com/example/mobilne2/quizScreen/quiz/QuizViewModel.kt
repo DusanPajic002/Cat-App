@@ -106,14 +106,12 @@ class QuizViewModel @Inject constructor(
                 val temp = allCats.flatMap { it.temperament.split(", ") }.distinct()
                 val breed = allCats.map { it.origin }.distinct()
                 val cats20 = allCats.filter { !it.id.equals("mala") }.shuffled().take(20)
-                val user = repository.getUserByID(1)
+                val user = withContext(Dispatchers.IO) { repository.getUserByID(1) }
                 setState { copy(userNickname = user.nickname)}
                 setState { copy(userID = user.id)}
 
                 cats20.forEach { cat ->
-                    withContext(Dispatchers.IO) {
-                        repository.featchAllImagesCatID(cat.id)
-                    }
+                    withContext(Dispatchers.IO) { repository.featchAllImagesCatID(cat.id) }
                 }
 
                 setState { copy(temp = temp) }
@@ -145,7 +143,7 @@ class QuizViewModel @Inject constructor(
         val breed = cat.origin
         val origin = state.value.breed.filter { it != breed }.shuffled().take(3)
         val answers = (origin + breed).shuffled()
-        val catImages = repository.getAllImagesCatID(cat.id).shuffled().first()
+        val catImages = withContext(Dispatchers.IO) { repository.getAllImagesCatID(cat.id).shuffled().first() }
 
         return CatQuestion(
             question = "What breed is the cat in the picture??",
@@ -159,7 +157,7 @@ class QuizViewModel @Inject constructor(
         val catTemper = cat.temperament.split(", ")
         val incorrectTemper = state.value.temp.filter { it !in catTemper }.shuffled().first()
         val answers = (catTemper.shuffled().take(3) + incorrectTemper).shuffled()
-        val catImages = repository.getAllImagesCatID(cat.id).shuffled().first()
+        val catImages = withContext(Dispatchers.IO) { repository.getAllImagesCatID(cat.id).shuffled().first() }
 
         return CatQuestion(
             question = "Kick the intruder out?",
@@ -173,7 +171,7 @@ class QuizViewModel @Inject constructor(
         val catTemper = cat.temperament.split(", ")
         val incorrectTemper = state.value.temp.filter { it !in catTemper }.shuffled().take(3)
         val answers = (incorrectTemper + catTemper.shuffled().first()).shuffled()
-        val catImages = repository.getAllImagesCatID(cat.id).shuffled().first()
+        val catImages = withContext(Dispatchers.IO) { repository.getAllImagesCatID(cat.id).shuffled().first() }
 
         return CatQuestion(
             question = "Throw out the temper that does not belong?",

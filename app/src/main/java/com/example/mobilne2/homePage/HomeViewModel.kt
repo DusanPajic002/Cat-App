@@ -30,9 +30,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             setState { copy(fetching = true) }
             try {
-
                 withContext(Dispatchers.IO){repositoryList.fetchAllCats()}
-
             } catch (error: Exception) {
                 setState { copy(error = HomeState.Error.LoadingFailed()) }
             } finally {

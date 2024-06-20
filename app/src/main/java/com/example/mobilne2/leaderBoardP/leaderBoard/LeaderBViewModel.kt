@@ -7,11 +7,13 @@ import com.example.mobilne2.leaderBoardP.mapper.asLeaderBoardUI
 import com.example.mobilne2.leaderBoardP.repository.LeaderBoardRepository
 import com.example.mobilne2.quizScreen.quiz.QuizState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
@@ -56,7 +58,7 @@ class LeaderBViewModel @Inject constructor(
             setState { copy(fetching = true) }
             try {
 
-                val leaderBoardOnline = repository.getLeaderBoardOnline(1).map { it.asLeaderBoardUI() }
+                val leaderBoardOnline = withContext(Dispatchers.IO) {repository.getLeaderBoardOnline(1).map { it.asLeaderBoardUI() } }
                 setState { copy(leaderBoardOnline = leaderBoardOnline ) }
                 val nPage1 = leaderBoardOnline.size/state.value.dataPerPage
                 val nPage2 = if ((leaderBoardOnline.size % state.value.dataPerPage) != 0) 1 else 0
