@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.math.max
 import kotlin.math.min
 
 
@@ -64,13 +65,19 @@ class CatGalleryViewModel @Inject constructor(
                 withContext(Dispatchers.IO) { repository.fetchImages(catId) }
 
                 val album = withContext(Dispatchers.IO) { repository.getAllImagesCatID(catId) }
+                println( "-------------------" + album.size)
+                println( "-------------------" + album)
                 setState { copy(album = album.map { it.asCatImageUiModel() }) }
+                println( "-------------------" + state.value.album.size)
                 val nPage1 = album.size/state.value.dataPerPage
                 val nPage2 = if ((album.size % state.value.dataPerPage) != 0) 1 else 0
-                setState { copy(maxPage = ( nPage1 + nPage2 )) }
+                val maxPages = max(nPage1 + nPage2,1)
+                setState { copy(maxPage = maxPages) }
 
                 val catsPerPage = state.value.album.subList(0, state.value.dataPerPage)
+                println( "------------a-------" + catsPerPage.size)
                 setState { copy(catsPerPage = catsPerPage)}
+                println( "------------a-------" + state.value.catsPerPage.size)
 
             } catch (error: Exception) {
                 setState { copy(error = CatGalleryState.Error.LoadError()) }

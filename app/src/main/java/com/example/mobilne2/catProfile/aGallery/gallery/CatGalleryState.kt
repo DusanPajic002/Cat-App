@@ -7,7 +7,7 @@ data class CatGalleryState (
     val fetching: Boolean = false,
     val page : Int = 1,
     val maxPage : Int = 1,
-    val dataPerPage : Int = 10,
+    val dataPerPage : Int = 5,
     val album: List<CatImageUI> = emptyList(),
     val catsPerPage: List<CatImageUI> = emptyList(),
     val error: Error? = null,

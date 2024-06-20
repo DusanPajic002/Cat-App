@@ -13,8 +13,8 @@ interface CatProfileApi {
 
     @GET("images/search")
     suspend fun getAllImages(
-        @Query("limit") limit: Int = 100,
-        @Query("catId") catId: String
+        @Query("limit") limit: Int = 10,
+        @Query("breed_ids") breed_ids: String
     ): List<CatImageApiModel>
 
 }

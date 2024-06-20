@@ -58,10 +58,10 @@ class LeaderBViewModel @Inject constructor(
 
                 val leaderBoardOnline = repository.getLeaderBoardOnline(1).map { it.asLeaderBoardUI() }
                 setState { copy(leaderBoardOnline = leaderBoardOnline ) }
-                // 25 / 8  = 3 . 1
                 val nPage1 = leaderBoardOnline.size/state.value.dataPerPage
                 val nPage2 = if ((leaderBoardOnline.size % state.value.dataPerPage) != 0) 1 else 0
-                setState { copy(maxPage = ( nPage1 + nPage2 )) }
+                val maxPages = max(nPage1 + nPage2,1)
+                setState { copy(maxPage = maxPages) }
 
                 val leaderBoardOnlinePerPage = state.value.leaderBoardOnline.subList(0, state.value.dataPerPage)
                 setState { copy(leaderBoardOnlinePerPage = leaderBoardOnlinePerPage)}

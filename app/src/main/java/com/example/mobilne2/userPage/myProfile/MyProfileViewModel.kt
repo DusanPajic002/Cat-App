@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.max
 import kotlin.math.min
 
 @HiltViewModel
@@ -52,7 +53,8 @@ class MyProfileViewModel @Inject constructor(
 
                 val nPage1 = leaderBoard.size/state.value.dataPerPage
                 val nPage2 = if ((leaderBoard.size % state.value.dataPerPage) != 0) 1 else 0
-                setState { copy(maxPage = ( nPage1 + nPage2 )) }
+                val maxPages = max(nPage1 + nPage2,1)
+                setState { copy(maxPage = maxPages) }
 
                 val usersPerPage = state.value.leaderBoard.subList(0, state.value.dataPerPage)
                 setState { copy(usersPerPage = usersPerPage)}
