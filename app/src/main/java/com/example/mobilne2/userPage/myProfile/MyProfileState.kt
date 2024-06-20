@@ -5,7 +5,6 @@ import com.example.mobilne2.userPage.db.User
 
 data class MyProfileState(
     val loading: Boolean = false,
-    val publicLB : List<LeaderBoardUI> = emptyList(),
     val privateLB : List<LeaderBoardUI> = emptyList(),
     val leaderBoard : List<LeaderBoardUI> = emptyList(),
     val usersPerPage : List<LeaderBoardUI> = emptyList(),

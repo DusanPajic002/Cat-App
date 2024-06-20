@@ -75,7 +75,14 @@ class QuizViewModel @Inject constructor(
                                 result = state.value.score,
                                 category = state.value.category,
                             )
+                            val leaderBoardData2 = LeaderBoard(
+                                userID = state.value.userID,
+                                nickname = state.value.userNickname,
+                                result = state.value.score,
+                                createdAt = System.currentTimeMillis(),
+                            )
                             repository.pusblishOnline(leaderBoardData)
+                            repository.pusblishPrivate(leaderBoardData2)
                         }else{
                             val leaderBoardData = LeaderBoard(
                                 userID = state.value.userID,

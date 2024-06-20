@@ -42,13 +42,10 @@ class MyProfileViewModel @Inject constructor(
                 val user = repository.getUserByID(1)
                 setState { copy(user = user) }
 
-                val publicLB = repositoryLB.getLeaderBoardOnline(1).map { it.asLeaderBoardUI() }
-                setState { copy(publicLB = publicLB ) }
-
                 val privateLB = repositoryLB.getPLBbyUserID(user.id).map { it.asLeaderBoardUI() }
                 setState { copy(privateLB = privateLB ) }
 
-                val leaderBoard = (publicLB + privateLB).sortedByDescending { it.createdAt }
+                val leaderBoard = (privateLB).sortedByDescending { it.createdAt }
                 setState { copy(leaderBoard = leaderBoard) }
 
                 val nPage1 = leaderBoard.size/state.value.dataPerPage
