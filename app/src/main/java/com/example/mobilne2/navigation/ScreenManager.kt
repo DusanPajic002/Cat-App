@@ -1,6 +1,5 @@
 package com.example.mobilne2.navigation
 
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut

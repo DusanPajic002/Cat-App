@@ -8,7 +8,6 @@ import javax.inject.Inject
 class AppDatabaseBuilder @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {
-
     fun build(): AppDatabase {
         return Room.databaseBuilder(
             context,

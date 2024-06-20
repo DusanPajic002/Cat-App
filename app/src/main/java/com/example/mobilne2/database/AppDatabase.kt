@@ -21,6 +21,7 @@ import com.example.mobilne2.userPage.db.UserDao
     version = 6,
     exportSchema = true,
 )
+
 abstract class AppDatabase : RoomDatabase() {
     abstract fun catListDao(): CatListDao
     abstract fun leaderBoardDao(): LeaderBoardDao

@@ -37,7 +37,7 @@ class CatProfileViewModel @Inject constructor(
             try {
                 val cat = withContext(Dispatchers.IO) {repository.getCats(catId)}
                 setState { copy(cat = cat.asCatUiModel()) }
-                withContext(Dispatchers.IO) {repository.fetchImages(cat.reference_image_id.toString(), cat.id)}
+                withContext(Dispatchers.IO) { repository.fetchImages(cat.reference_image_id.toString(), cat.id)}
 
                 val image = withContext(Dispatchers.IO) {repository.getImagesByID(cat.reference_image_id.toString())}
                 setState { copy(image = image.asCatImageUiModel()) }
