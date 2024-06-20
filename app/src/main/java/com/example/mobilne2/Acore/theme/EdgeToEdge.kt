@@ -1,4 +1,4 @@
-package com.example.mobilne2.core.theme
+package com.example.mobilne2.Acore.theme
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge

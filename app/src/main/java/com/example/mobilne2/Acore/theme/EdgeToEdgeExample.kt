@@ -1,7 +1,6 @@
-package com.example.mobilne2.core.theme
+package com.example.mobilne2.Acore.theme
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState

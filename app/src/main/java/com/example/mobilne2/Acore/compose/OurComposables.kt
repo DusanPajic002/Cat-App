@@ -1,4 +1,4 @@
-package com.example.mobilne2.core.compose
+package com.example.mobilne2.Acore.compose
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock

@@ -43,10 +43,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import coil.compose.rememberImagePainter
 import com.example.mobilne2.R
-import com.example.mobilne2.catProfile.aGallery.aPhoto.CatPhotoState
-import com.example.mobilne2.catProfile.profile.model.CatImageUI
-import com.example.mobilne2.core.compose.PhotoPreview
-import com.example.mobilne2.leaderBoardP.leaderBoard.LeaderBState
+import com.example.mobilne2.Acore.compose.PhotoPreview
 
 fun NavGraphBuilder.catGalleryScreen(
     route: String,

@@ -1,4 +1,4 @@
-package com.example.mobilne2.core.compose
+package com.example.mobilne2.Acore.compose
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
