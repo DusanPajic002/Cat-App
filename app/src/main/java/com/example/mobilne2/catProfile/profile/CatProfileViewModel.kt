@@ -35,7 +35,6 @@ class CatProfileViewModel @Inject constructor(
         viewModelScope.launch {
             setState { copy(fetching = true) }
             try {
-
                 val cat = withContext(Dispatchers.IO) {repository.getCats(catId)}
                 setState { copy(cat = cat.asCatUiModel()) }
                 withContext(Dispatchers.IO) {repository.fetchImages(cat.reference_image_id.toString(), cat.id)}
@@ -44,7 +43,6 @@ class CatProfileViewModel @Inject constructor(
                 setState { copy(image = image.asCatImageUiModel()) }
 
             } catch (error: Exception) {
-                setState { copy(catId = "") }
                 setState { copy(error = CatProfileState.DetailsError.DataUpdateFailed(cause = error)) }
             } finally {
                 setState { copy(fetching = false) }

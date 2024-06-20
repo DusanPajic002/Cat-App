@@ -1,5 +1,9 @@
 package com.example.mobilne2.quizScreen.quiz
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -73,33 +77,37 @@ fun QuizScreen(
                 modifier = Modifier.fillMaxSize()
             )
             Column(
-                modifier = Modifier.fillMaxSize().padding(paddingValues),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-                if(data.error != null) {
-                   errorHandler( data = data, onClose = onClose )
-                }else if (!data.loading && !data.finished && !data.cancled) {
+                if (data.error != null) {
+                    errorHandler(data = data, onClose = onClose)
+                } else if (!data.loading && !data.finished && !data.cancled) {
 
-                    quizTimer( data = data )
+                    quizTimer(data = data)
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    quizQuestion( data = data, eventPublisher = eventPublisher )
+                    quizQuestion(data = data, eventPublisher = eventPublisher)
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Button(
                         onClick = { eventPublisher(QuizState.Events.updateCancle(true)) },
-                        modifier = Modifier.padding(8.dp).size(145.dp, 47.dp)
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .size(145.dp, 47.dp)
                     ) { Text(text = "Cancle", fontSize = 16.sp) }
 
                 } else if (data.finished && !data.cancled && !data.loading) {
                     eventPublisher(QuizState.Events.updateScore)
                     QuizResult(score = data.score, eventPublisher, onClose = onClose)
-                } else if (data.cancled && !data.finished && !data.loading){
+                } else if (data.cancled && !data.finished && !data.loading) {
                     QuizCancled(onClose = onClose)
-                } else if (data.loading && !data.finished && !data.cancled){
+                } else if (data.loading && !data.finished && !data.cancled) {
                     QuizLoading()
                 }
 
@@ -113,28 +121,48 @@ private fun quizQuestion(
     data: QuizState,
     eventPublisher: (QuizState.Events) -> Unit
 ){
-    val questionInfo = data.questions[data.questionNumber]
-    Text(
-        text = "Q" + (data.questionNumber + 1) + ": " + questionInfo.question,
-        fontSize = 24.sp,
-        modifier = Modifier.padding(16.dp)
-    )
-    Image(
-        painter = rememberImagePainter(questionInfo.catImage),
-        contentDescription = "Cat Image",
-        modifier = Modifier.height(200.dp).padding(16.dp).fillMaxWidth().clip(RoundedCornerShape(8.dp))
-    )
-    questionInfo.answers.forEachIndexed { index, answer ->
-        Button(
-            onClick = {
-                eventPublisher(QuizState.Events.updateCorrectAnswers(answer))
-                eventPublisher(QuizState.Events.changeQuestion((data.questionNumber + 1)))
-                if(data.questionNumber == data.questions.size-1)
-                    eventPublisher(QuizState.Events.updateFinish(true))
-            },
-            modifier = Modifier.padding(8.dp).size(195.dp, 47.dp)
-        ) {
-            Text(text = answer.capitalize(), fontSize = 19.sp)
+    AnimatedContent(
+        targetState = data.doTransition,
+        transitionSpec = {
+            slideInHorizontally { it }.togetherWith(slideOutHorizontally { -it })
+        }
+    ){
+        Column (
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ){
+            val questionInfo = data.questions[data.questionNumber]
+            Text(
+                text = "Q" + (data.questionNumber + 1) + ": " + questionInfo.question,
+                fontSize = 24.sp,
+                modifier = Modifier.padding(16.dp)
+            )
+            Image(
+                painter = rememberImagePainter(questionInfo.catImage),
+                contentDescription = "Cat Image",
+                modifier = Modifier
+                    .height(200.dp)
+                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+            )
+            questionInfo.answers.forEachIndexed { index, answer ->
+                Button(
+                    onClick = {
+                        eventPublisher(QuizState.Events.updateCorrectAnswers(answer))
+                        eventPublisher(QuizState.Events.changeQuestion((data.questionNumber + 1), it))
+                        if(data.questionNumber == data.questions.size-1) {
+                            eventPublisher(QuizState.Events.updateFinish(true))
+                        }
+                    },
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .size(195.dp, 47.dp)
+                ) {
+                    Text(text = answer.capitalize(), fontSize = 19.sp)
+                }
+            }
         }
     }
 }
@@ -144,7 +172,10 @@ fun quizTimer(
     data: QuizState
 ){
     Box(
-        modifier = Modifier.padding(20.dp).background(Color.Gray, shape = RoundedCornerShape(10.dp)).padding(10.dp)
+        modifier = Modifier
+            .padding(20.dp)
+            .background(Color.Gray, shape = RoundedCornerShape(10.dp))
+            .padding(10.dp)
     ) {
         Text(
             text = String.format("%02d:%02d", data.remainingTime / 60, data.remainingTime % 60),
@@ -178,7 +209,9 @@ fun QuizCancled(
     onClose: () -> Unit
 ) {
     Box(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -272,7 +305,9 @@ private fun errorHandler(
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = { onClose() },
-                modifier = Modifier.padding(8.dp).size(145.dp, 47.dp)
+                modifier = Modifier
+                    .padding(8.dp)
+                    .size(145.dp, 47.dp)
             ){ Text(text = "Go to Home") }
         }
         else -> { }

@@ -49,7 +49,7 @@ class QuizViewModel @Inject constructor(
             events.collect {
                 when (it) {
                     is QuizState.Events.changeQuestion -> {
-                        setState { copy(questionNumber = it.number) }
+                        setState { copy(questionNumber = it.number, doTransition = !it.doTransition) }
                     }
                     is QuizState.Events.updateCorrectAnswers -> {
                         if (it.answer.equals(state.value.questions[state.value.questionNumber].correctAnswer)) {

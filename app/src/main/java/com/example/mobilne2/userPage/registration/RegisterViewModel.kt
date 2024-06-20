@@ -55,8 +55,7 @@ class RegisterViewModel @Inject constructor(
                         val email = it.email
                         val fullNameRegex = "^[A-Z][a-z]{3,} [A-Z][a-z]{3,}$".toRegex()
                         val nicknameRegex = "^[A-Za-z0-9_]{3,}$".toRegex()
-                        val emailRegex =
-                            "^[A-Za-z0-9_]{3,}@[A-Za-z0-9_]{3,}\\.[A-Za-z0-9_]{2,}$".toRegex()
+                        val emailRegex = "^[A-Za-z0-9_]{3,}@[A-Za-z0-9_]{3,}\\.[A-Za-z0-9_]{2,}$".toRegex()
 
                         if (fullName.isEmpty() || email.isEmpty() || nickname.isEmpty()) {
                             setState { copy(error = RegisterState.Error.MissingParts()) }

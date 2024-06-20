@@ -11,6 +11,7 @@ data class QuizState(
     val score: Double = 0.0,
     val remainingTime: Long = 0,
     val fullTime: Int = 0,
+    val doTransition: Boolean = false,
     val finished: Boolean = false,
     val cancled: Boolean = false,
     val correctAnswers: Int = 0,
@@ -22,7 +23,7 @@ data class QuizState(
 ){
     sealed class Events {
         data object updateScore : Events()
-        data class changeQuestion(val number: Int) : Events()
+        data class changeQuestion(val number: Int, val doTransition: Boolean) : Events()
         data class updateCorrectAnswers(val answer: String) : Events()
         data class updateFinish(val finished: Boolean) : Events()
         data class publishEvent(val publish: Boolean) : Events()
