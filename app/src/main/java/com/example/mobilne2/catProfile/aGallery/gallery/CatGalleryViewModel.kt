@@ -74,7 +74,7 @@ class CatGalleryViewModel @Inject constructor(
                 val maxPages = max(nPage1 + nPage2,1)
                 setState { copy(maxPage = maxPages) }
 
-                val catsPerPage = state.value.album.subList(0, state.value.dataPerPage)
+                val catsPerPage = state.value.album.subList(0, min(state.value.dataPerPage, state.value.album.size))
                 println( "------------a-------" + catsPerPage.size)
                 setState { copy(catsPerPage = catsPerPage)}
                 println( "------------a-------" + state.value.catsPerPage.size)

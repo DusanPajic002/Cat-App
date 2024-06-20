@@ -56,7 +56,7 @@ class MyProfileViewModel @Inject constructor(
                 val maxPages = max(nPage1 + nPage2,1)
                 setState { copy(maxPage = maxPages) }
 
-                val usersPerPage = state.value.leaderBoard.subList(0, state.value.dataPerPage)
+                val usersPerPage = state.value.leaderBoard.subList(0, min(state.value.dataPerPage, state.value.leaderBoard.size))
                 setState { copy(usersPerPage = usersPerPage)}
 
             } catch (error: Exception) {

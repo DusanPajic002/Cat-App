@@ -63,7 +63,7 @@ class LeaderBViewModel @Inject constructor(
                 val maxPages = max(nPage1 + nPage2,1)
                 setState { copy(maxPage = maxPages) }
 
-                val leaderBoardOnlinePerPage = state.value.leaderBoardOnline.subList(0, state.value.dataPerPage)
+                val leaderBoardOnlinePerPage = state.value.leaderBoardOnline.subList(0, min(state.value.dataPerPage, state.value.leaderBoardOnline.size))
                 setState { copy(leaderBoardOnlinePerPage = leaderBoardOnlinePerPage)}
 
             } catch (error: Exception) {
