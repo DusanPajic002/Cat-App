@@ -65,7 +65,6 @@ class CatGalleryViewModel @Inject constructor(
 
                 val album = withContext(Dispatchers.IO) { repository.getAllImagesCatID(catId) }
                 setState { copy(album = album.map { it.asCatImageUiModel() }) }
-
                 val nPage1 = album.size/state.value.dataPerPage
                 val nPage2 = if ((album.size % state.value.dataPerPage) != 0) 1 else 0
                 setState { copy(maxPage = ( nPage1 + nPage2 )) }

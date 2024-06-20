@@ -18,24 +18,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkingModule {
 
-    @CatApiClient
-    @Singleton
-    @Provides
-    fun provideOkHttpClient() : OkHttpClient {
-        return OkHttpClient.Builder()
-            .addInterceptor {
-                val updatedRequest = it.request().newBuilder()
-                    .addHeader("CustomHeader", "CustomValue")
-                    .build()
-                it.proceed(updatedRequest)
-            }
-            .addInterceptor(
-                HttpLoggingInterceptor().apply {
-                    setLevel(HttpLoggingInterceptor.Level.BODY)
-                }
-            )
-            .build()
-    }
 
     @LeaderboardApiClient
     @Singleton
@@ -55,13 +37,32 @@ object NetworkingModule {
             )
             .build()
     }
+    @CatApiClient
+    @Singleton
+    @Provides
+    fun provideOkHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor{
+                val updateRequest = it.request().newBuilder()
+                    .addHeader("CustomHeader", "CustomValue")
+                    .addHeader("x-api-key", "live_1vkv7ji5X32GXyBCziiXNjndJCpAuJ782LjXRxxkw6MYwYgfBNasihvnAKegKgAl")
+                    .build()
+                it.proceed(updateRequest)
+            }
+            .addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    setLevel(HttpLoggingInterceptor.Level.BODY)
+                }
+            )
+            .build()
+    }
 
     @CatApiClient
     @Singleton
     @Provides
     fun provideRetrofitClient(
         @CatApiClient okHttpClient: OkHttpClient,
-    ) : Retrofit {
+    ): Retrofit {
         return Retrofit.Builder()
             .baseUrl("https://api.thecatapi.com/v1/")
             .client(okHttpClient)

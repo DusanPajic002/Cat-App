@@ -7,11 +7,12 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CatProfileApi {
+
     @GET("images/{id}")
     suspend fun get_image_id(@Path("id") imageID: String): CatImageApiModel
 
     @GET("images/search")
-    suspend fun getAllImages (
+    suspend fun getAllImages(
         @Query("limit") limit: Int = 100,
         @Query("catId") catId: String
     ): List<CatImageApiModel>
